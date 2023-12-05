@@ -13,7 +13,10 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                Color("Background").ignoresSafeArea(.all)
                 Image("Login-Register")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .padding(.bottom, 250)
                     .padding(.top, 60)
                 VStack {
@@ -52,6 +55,7 @@ struct ContentView: View {
             }
         }
     }
+    
 }
 
 struct Login: View {
@@ -88,7 +92,8 @@ struct Login: View {
                 
                 .navigationDestination(
                      isPresented: $authorization) {
-                          Main()
+                         Main()
+                             .navigationBarBackButtonHidden(true)
                      }
             }
         }
@@ -141,8 +146,45 @@ struct Register: View {
 }
 
 struct Main:View {
+    var width: CGFloat = 200
+    var height: CGFloat = 20
+    var percentage_food: CGFloat = 60
+    var percentage_water: CGFloat = 70
+    var color1 = Color(#colorLiteral(red: 0.8560530543, green: 0.4147394896, blue: 0.4633637071, alpha: 1))
+    var color2 = Color(#colorLiteral(red: 0.8743290305, green: 0, blue: 0.05853315443, alpha: 1))
+    
     var body: some View {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Hello, world!@*/Text("Hello, world!")/*@END_MENU_TOKEN@*/
+        let multiplier = width / 100
+        
+        VStack{
+            ZStack(alignment: .leading){
+                RoundedRectangle(cornerRadius: height, style: .continuous)
+                        .frame (width: width, height: height)
+                        .foregroundColor (Color.black.opacity(0.1) )
+                
+                RoundedRectangle(cornerRadius: height, style: .continuous)
+                        .frame (width: percentage_food * multiplier, height: height)
+                        .background (
+                            LinearGradient (gradient: Gradient(colors: [color1, color2]), startPoint: .leading, endPoint: .trailing)
+                                .clipShape (RoundedRectangle (cornerRadius: height, style: .continuous))
+                        )
+                        .foregroundColor(.clear)
+            }
+            
+            ZStack(alignment: .leading){
+                RoundedRectangle(cornerRadius: height, style: .continuous)
+                        .frame (width: width, height: height)
+                        .foregroundColor (Color.black.opacity(0.1) )
+                
+                RoundedRectangle(cornerRadius: height, style: .continuous)
+                        .frame (width: percentage_water * multiplier, height: height)
+                        .background (
+                            LinearGradient (gradient: Gradient(colors: [color1, color2]), startPoint: .leading, endPoint: .trailing)
+                                .clipShape(RoundedRectangle (cornerRadius: height, style: .continuous))
+                        )
+                        .foregroundColor(.clear)
+            }
+        }
     }
 }
 
