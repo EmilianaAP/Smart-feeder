@@ -17,31 +17,45 @@ struct ContentView: View {
                 Image("Login-Register")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .padding(.bottom, 250)
-                    .padding(.top, 60)
+                    .padding(.bottom, 100)
                 VStack {
                     Text("SnackBuddy")
-                        .font(.custom(
-                                "Baskerville-BoldItalic",
-                                fixedSize: 36))
                         .bold()
-                        .padding(.top, 80)
-                        .padding(.bottom, 10)
+                        .padding(.top, 170)
+                        .padding(.bottom, 20)
+                        .font(.system(size: 56))
+                    
+                    Spacer()
                     
                     Button("Login") {
                         print("Login tapped!")
                         showLogin = true
                     }
+                    .padding(.leading, 50)
+                    .padding(.trailing, 50)
+                    .padding(.top, 5)
                     .padding(.bottom, 5)
-                    .fixedSize()
-                    .foregroundColor(Color("Pink"))
+                    .background(Color(#colorLiteral(red: 0.5722110271, green: 0.6789935231, blue: 0.4731182456, alpha: 1)))
+                    .foregroundColor(.white)
+                    .cornerRadius(22)
+                    .padding(.bottom, 15)
+                    .font(.system(size: 20))
                     
                     Button("Register") {
                         print("Register tapped!")
                         showRegister = true
                     }
-                    .fixedSize()
-                    .foregroundColor(Color("Pink"))
+                    .padding(.leading, 38)
+                    .padding(.trailing, 38)
+                    .padding(.top, 5)
+                    .padding(.bottom, 5)
+                    .background(Color(#colorLiteral(red: 0.5722110271, green: 0.6789935231, blue: 0.4731182456, alpha: 1)))
+                    .foregroundColor(.white)
+                    .cornerRadius(22)
+                    .padding(.bottom, 100)
+                    .font(.system(size: 20))
+                    
+                    Spacer()
                 }
                 
                 .navigationDestination(
@@ -65,42 +79,45 @@ struct Login: View {
     
     var body: some View {
         NavigationStack {
-            VStack{
-                
-                Text("Login")
-                    .font(.custom(
-                        "Baskerville-BoldItalic",
-                        fixedSize: 36))
-                    .bold()
-                    .padding(.top, 20)
-                    .padding(.bottom, 10)
-                
-                Form {
-                    TextField(text: $username, prompt: Text("Username")) {
-                        Text("Username")
-                    }
-                    SecureField(text: $password, prompt: Text("Password")) {
-                        Text("Password")
-                    }
+            ZStack{
+                Color("Background").ignoresSafeArea(.all)
+                VStack{
+                    Text("Login")
+                        .bold()
+                        .padding(.top, 120)
+                        .padding(.bottom, 10)
                     
-                    Button("Login") {
-                        authorization = true                    }
-                    .fixedSize()
-                    .foregroundColor(Color("Pink"))
+                    Form {
+                        Section(){
+                            TextField(text: $username, prompt: Text("Username")) {
+                                Text("Email")
+                            }
+                            SecureField(text: $password, prompt: Text("Password")) {
+                                Text("Password")
+                            }
+                        }
+                        
+                        Button("Login") {
+                            authorization = true                    }
+                        .fixedSize()
+                        .foregroundColor(Color("Pink"))
+                        
+                    }
+                        .scrollContentBackground(.hidden)
                     
+                    .navigationDestination(
+                        isPresented: $authorization) {
+                            Main()
+                                .navigationBarBackButtonHidden(true)
+                        }
                 }
-                
-                .navigationDestination(
-                     isPresented: $authorization) {
-                         Main()
-                             .navigationBarBackButtonHidden(true)
-                     }
             }
         }
     }
 }
 
 struct Register: View {
+@State private var showLogin = false
 @State private var username: String = ""
 @State private var email: String = ""
 @State private var password: String = ""
@@ -108,38 +125,51 @@ struct Register: View {
 
     
     var body: some View {
-        VStack{
-            Text("Register")
-                .font(.custom(
-                        "Baskerville-BoldItalic",
-                        fixedSize: 36))
-                .bold()
-                .padding(.bottom, 10)
-            
-            Form {
-                TextField(text: $username, prompt:
-                    Text("Username")) {
-                    Text("Username")
+        NavigationStack{
+            ZStack{
+                Color("Background").ignoresSafeArea(.all)
+                VStack{
+                    Text("Register")
+                        .font(.custom(
+                            "Bold",
+                            fixedSize: 36))
+                        .bold()
+                        .padding(.top, 120)
+                        .padding(.bottom, 10)
+                    
+                    Form {
+                        Section(){
+                            TextField(text: $username, prompt:
+                                        Text("Username")) {
+                                Text("Username")
+                            }
+                            TextField(text: $email, prompt:
+                                        Text("Email")) {
+                                Text("Email")
+                            }
+                            SecureField(text: $password, prompt:
+                                            Text("Password")) {
+                                Text("Password")
+                            }
+                            SecureField(text: $password_confirm, prompt:
+                                            Text("Confirm password")) {
+                                Text("Confirm password")
+                            }
+                        }
+                        
+                        Button("Submit") {
+                            showLogin = true
+                        }
+                        .fixedSize()
+                        .foregroundColor(Color("Pink"))
+                        
+                    }
+                    .scrollContentBackground(.hidden)
                 }
-                TextField(text: $email, prompt:
-                    Text("Email")) {
-                    Text("Email")
-                }
-                SecureField(text: $password, prompt:
-                    Text("Password")) {
-                    Text("Password")
-                }
-                SecureField(text: $password_confirm, prompt:
-                    Text("Confirm password")) {
-                    Text("Confirm password")
-                }
-                
-                Button("Submit") {
-                    // register!
-                }
-                .fixedSize()
-                .foregroundColor(Color("Pink"))
-                
+                .navigationDestination(
+                    isPresented: $showLogin) {
+                        Login()
+                    }
             }
         }
     }
@@ -149,40 +179,42 @@ struct Main:View {
     var width: CGFloat = 200
     var height: CGFloat = 20
     var percentage_food: CGFloat = 60
-    var percentage_water: CGFloat = 70
+    var percentage_water: CGFloat = 100
     var color1 = Color(#colorLiteral(red: 0.8560530543, green: 0.4147394896, blue: 0.4633637071, alpha: 1))
     var color2 = Color(#colorLiteral(red: 0.8743290305, green: 0, blue: 0.05853315443, alpha: 1))
     
     var body: some View {
         let multiplier = width / 100
-        
-        VStack{
-            ZStack(alignment: .leading){
-                RoundedRectangle(cornerRadius: height, style: .continuous)
+        ZStack{
+            Color("Background").ignoresSafeArea(.all)
+            VStack{
+                ZStack(alignment: .leading){
+                    RoundedRectangle(cornerRadius: height, style: .continuous)
                         .frame (width: width, height: height)
                         .foregroundColor (Color.black.opacity(0.1) )
-                
-                RoundedRectangle(cornerRadius: height, style: .continuous)
+                    
+                    RoundedRectangle(cornerRadius: height, style: .continuous)
                         .frame (width: percentage_food * multiplier, height: height)
                         .background (
                             LinearGradient (gradient: Gradient(colors: [color1, color2]), startPoint: .leading, endPoint: .trailing)
                                 .clipShape (RoundedRectangle (cornerRadius: height, style: .continuous))
                         )
                         .foregroundColor(.clear)
-            }
-            
-            ZStack(alignment: .leading){
-                RoundedRectangle(cornerRadius: height, style: .continuous)
+                }
+                .padding(.bottom, 20)
+                ZStack(alignment: .leading){
+                    RoundedRectangle(cornerRadius: height, style: .continuous)
                         .frame (width: width, height: height)
                         .foregroundColor (Color.black.opacity(0.1) )
-                
-                RoundedRectangle(cornerRadius: height, style: .continuous)
+                    
+                    RoundedRectangle(cornerRadius: height, style: .continuous)
                         .frame (width: percentage_water * multiplier, height: height)
                         .background (
                             LinearGradient (gradient: Gradient(colors: [color1, color2]), startPoint: .leading, endPoint: .trailing)
                                 .clipShape(RoundedRectangle (cornerRadius: height, style: .continuous))
                         )
                         .foregroundColor(.clear)
+                }
             }
         }
     }
