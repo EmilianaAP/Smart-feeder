@@ -7,40 +7,29 @@
 
 import SwiftUI
 
-// Creating first page when app is open
 struct ContentView: View {
-    /// Add variables which when equals true show other pages
     @State private var showLogin: Bool = false
     @State private var showRegister: Bool = false
     
-    /// Add body which extends View
     var body: some View {
-        // Add page navigation
         NavigationStack {
-            // Stack elements on top of each other
             ZStack {
-                // Create background
                 Color("Background").ignoresSafeArea(.all)
                 
-                // Add image
                 Image("Login-Register")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .padding(.bottom, 100)
                 
-                // Stack elements vertically
                 VStack {
-                    // Add Text
                     Text("SnackBuddy")
                         .bold()
                         .padding(.top, 170)
                         .padding(.bottom, 20)
                         .font(.system(size: 56))
                     
-                    // Move "SnackBuddy" text to top part of the screen
                     Spacer()
                     
-                    // Add button which when pressed change showLogin value to true
                     Button("Login") {
                         print("Login tapped!")
                         showLogin = true
@@ -55,7 +44,6 @@ struct ContentView: View {
                     .padding(.bottom, 15)
                     .font(.system(size: 20))
                     
-                    // Add button which when pressed change showRegister value to true
                     Button("Register") {
                         print("Register tapped!")
                         showRegister = true
@@ -70,11 +58,9 @@ struct ContentView: View {
                     .padding(.bottom, 100)
                     .font(.system(size: 20))
                     
-                    // Move buttons to the center of the screen
                     Spacer()
                 }
                 
-                // if showLogin/showRegister equals true switches views
                 .navigationDestination(
                      isPresented: $showLogin) {
                           Login()
@@ -89,14 +75,11 @@ struct ContentView: View {
     }
 }
 
-// Creating Login page
 struct Login: View {
-// Creating variable for username, password and authorization
 @State private var username: String = ""
 @State private var password: String = ""
 @State private var authorization: Bool = false
     
-    // Add body which extends View
     var body: some View {
         NavigationStack {
             ZStack{
@@ -145,7 +128,6 @@ struct Register: View {
 @State private var password: String = ""
 @State private var password_confirm: String = ""
 
-    // Add body which extends View
     var body: some View {
         NavigationStack{
             ZStack{
@@ -305,6 +287,5 @@ struct Main:View {
 }
 
 #Preview {
-    // Show first page
     ContentView()
 }
