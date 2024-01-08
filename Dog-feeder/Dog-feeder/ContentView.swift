@@ -31,7 +31,6 @@ struct ContentView: View {
                     Spacer()
                     
                     Button("Login") {
-                        print("Login tapped!")
                         showLogin = true
                     }
                     .padding(.leading, 50)
@@ -45,7 +44,6 @@ struct ContentView: View {
                     .font(.system(size: 20))
                     
                     Button("Register") {
-                        print("Register tapped!")
                         showRegister = true
                     }
                     .padding(.leading, 38)
@@ -179,6 +177,7 @@ struct Register: View {
 }
 
 struct Main:View {
+    @State private var showProfile = false
     var width: CGFloat = 200
     var height: CGFloat = 20
     var percentage_food: CGFloat = 60
@@ -199,7 +198,7 @@ struct Main:View {
                 HStack{
                     Spacer()
                     Button{
-                        print("View profile")
+                        showProfile = true
                     } label: {
                         Image("Profile")
                             .resizable()
@@ -276,12 +275,30 @@ struct Main:View {
                 Spacer()
                 
                 List {
-                    Text("First Row")
-                    Text("Second Row")
-                    Text("Third Row")
+                    Section {
+                        Text("First Row")
+                        Text("Second Row")
+                        Text("Third Row")
+                    } header: {
+                        Text("Notifications")
+                    }
                 }
                     .frame(height: 240)
+                    .scrollContentBackground(.hidden)
             }
+            .navigationDestination(
+                isPresented: $showProfile) {
+                    Profile()
+                }
+        }
+    }
+}
+
+struct Profile:View {
+    var body: some View {
+        ZStack{
+            Color("Background").ignoresSafeArea(.all)
+            Text("Profile page")
         }
     }
 }
