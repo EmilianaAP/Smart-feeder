@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct ContentView: View {
     @State private var showLogin: Bool = false
@@ -74,9 +75,20 @@ struct ContentView: View {
 }
 
 struct Login: View {
-@State private var username: String = ""
+@State private var email: String = ""
 @State private var password: String = ""
 @State private var authorization: Bool = false
+
+    private func loginUser() {
+        Auth.auth().signIn(withEmail: email, password: password) { result, err in
+            if let err = err {
+                print("Failed due to error:", err)
+                return
+            }
+            print("Successfully logged in with ID: \(result?.user.uid ?? "")")
+            authorization=true
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -91,16 +103,15 @@ struct Login: View {
                     
                     Form {
                         Section(){
-                            TextField(text: $username, prompt: Text("Email")) {
-                                Text("Email")
-                            }
-                            SecureField(text: $password, prompt: Text("Password")) {
-                                Text("Password")
-                            }
+                            TextField("Email", text: $email)
+                                .keyboardType(.emailAddress)
+                                .disableAutocorrection(true)
+                                .autocapitalization(.none)
+                            SecureField("Password", text: $password)
                         }
                         
                         Button("Login") {
-                            authorization = true                    }
+                            loginUser()                  }
                         .fixedSize()
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity)
@@ -126,6 +137,17 @@ struct Register: View {
 @State private var password: String = ""
 @State private var password_confirm: String = ""
 
+    private func createUser() {
+        Auth.auth().createUser(withEmail: email, password: password, completion: { result, err in
+            if let err = err {
+                print("Failed due to error:", err)
+                return
+            }
+            print("Successfully created account with ID: \(result?.user.uid ?? "")")
+            showLogin=true
+        })
+    }
+    
     var body: some View {
         NavigationStack{
             ZStack{
@@ -143,22 +165,16 @@ struct Register: View {
                                         Text("Username")) {
                                 Text("Username")
                             }
-                            TextField(text: $email, prompt:
-                                        Text("Email")) {
-                                Text("Email")
-                            }
-                            SecureField(text: $password, prompt:
-                                            Text("Password")) {
-                                Text("Password")
-                            }
-                            SecureField(text: $password_confirm, prompt:
-                                            Text("Confirm password")) {
-                                Text("Confirm password")
-                            }
+                            TextField("Email", text: $email)
+                                .keyboardType(.emailAddress)
+                                .disableAutocorrection(true)
+                                .autocapitalization(.none)
+                            SecureField("Password", text: $password)
+                            SecureField("Confirm password", text: $password_confirm)
                         }
                         
                         Button("Submit") {
-                            showLogin = true
+                            createUser()
                         }
                         .fixedSize()
                         .foregroundColor(.black)

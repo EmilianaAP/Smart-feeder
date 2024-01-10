@@ -1,5 +1,6 @@
 #include <Wire.h>
 #include <RTClib.h>
+#include <WiFiManager.h>
 
 RTC_DS3231 rtc;
 

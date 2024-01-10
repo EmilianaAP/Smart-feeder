@@ -13,6 +13,7 @@
 		007858202B4C532B007C0C22 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 0078581F2B4C532B007C0C22 /* FirebaseAnalyticsSwift */; };
 		007858222B4C532B007C0C22 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 007858212B4C532B007C0C22 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		007858242B4C532B007C0C22 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 007858232B4C532B007C0C22 /* FirebaseAppCheck */; };
+		007858272B4E93F2007C0C22 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 007858262B4E93F2007C0C22 /* FirebaseAuth */; };
 		00CD65442B0670B0004B8EA4 /* Dog_feederApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CD65432B0670B0004B8EA4 /* Dog_feederApp.swift */; };
 		00CD65462B0670B0004B8EA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CD65452B0670B0004B8EA4 /* ContentView.swift */; };
 		00CD65482B0670B1004B8EA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00CD65472B0670B1004B8EA4 /* Assets.xcassets */; };
@@ -36,6 +37,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				007858202B4C532B007C0C22 /* FirebaseAnalyticsSwift in Frameworks */,
+				007858272B4E93F2007C0C22 /* FirebaseAuth in Frameworks */,
 				0078581C2B4C532B007C0C22 /* FirebaseAnalytics in Frameworks */,
 				0078581E2B4C532B007C0C22 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				007858242B4C532B007C0C22 /* FirebaseAppCheck in Frameworks */,
@@ -46,12 +48,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		007858252B4E93F2007C0C22 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		00CD65372B0670B0004B8EA4 = {
 			isa = PBXGroup;
 			children = (
 				00CD65422B0670B0004B8EA4 /* Dog-feeder */,
 				00CD65412B0670B0004B8EA4 /* Products */,
 				CB9E6E621D0D0DE02D504937 /* Pods */,
+				007858252B4E93F2007C0C22 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -115,6 +125,7 @@
 				0078581F2B4C532B007C0C22 /* FirebaseAnalyticsSwift */,
 				007858212B4C532B007C0C22 /* FirebaseAnalyticsWithoutAdIdSupport */,
 				007858232B4C532B007C0C22 /* FirebaseAppCheck */,
+				007858262B4E93F2007C0C22 /* FirebaseAuth */,
 			);
 			productName = "Dog-feeder";
 			productReference = 00CD65402B0670B0004B8EA4 /* Dog-feeder.app */;
@@ -445,6 +456,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0078581A2B4C532B007C0C22 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAppCheck;
+		};
+		007858262B4E93F2007C0C22 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0078581A2B4C532B007C0C22 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
