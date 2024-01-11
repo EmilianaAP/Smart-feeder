@@ -1,13 +1,13 @@
 //
-//  ContentView.swift
-//  Smart-feeder
+//  StartingView.swift
+//  Dog-feeder
 //
-//  Created by Emiliana Petrenko on 16.11.23.
+//  Created by Emiliana Petrenko on 11.01.24.
 //
 
 import SwiftUI
 
-struct ContentView: View {
+struct StartView: View {
     @State private var showLogin: Bool = false
     @State private var showRegister: Bool = false
     
@@ -73,13 +73,6 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            ContentView()
-            
-            ContentView()
-                .environment(\.colorScheme, .dark)
-        }
-    }
+#Preview {
+    StartView()
 }

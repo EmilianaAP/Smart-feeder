@@ -24,21 +24,16 @@ WiFiClient espClient;
 PubSubClient client(server, 1883, callback, espClient);
 
 void reconnect() {
-  // Loop until we're reconnected
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
-    // Attempt to connect
     if (client.connect("arduinoClient")) {
       Serial.println("connected");
-      // Once connected, publish an announcement...
       client.publish("Feeder","hello world");
-      // ... and resubscribe
       client.subscribe("Topic_2");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
       Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
       delay(5000);
     }
   }
@@ -56,16 +51,12 @@ void setup() {
 
   WiFiManager wm;
   bool res;
-  // res = wm.autoConnect(); // auto generated AP name from chipid
-  // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
-  res = wm.autoConnect("AutoConnectAP","password"); // password protected ap
+  res = wm.autoConnect("AutoConnectAP","password");
 
   if(!res) {
       Serial.println("Failed to connect");
-      // ESP.restart();
   } 
-  else {
-      //if you get here you have connected to the WiFi    
+  else {  
       Serial.println("connected...yeey :)");
   }
 
@@ -86,7 +77,6 @@ void loop() {
   }
   client.loop();
 
-  // put your main code here, to run repeatedly:
   DateTime now = rtc.now();
   Serial.print("ESP32 RTC Date Time: ");
   Serial.print(now.year(), DEC);
