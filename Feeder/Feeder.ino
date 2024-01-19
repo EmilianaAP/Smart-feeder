@@ -3,6 +3,9 @@
 #include <WiFiManager.h>
 #include <SPI.h>
 #include <PubSubClient.h>
+#include <WifiUdp.h>
+#include <NTPClient.h>
+#include <TimeLib.h>
 
 RTC_DS3231 rtc;
 IPAddress server(34, 122, 107, 45);
@@ -22,6 +25,14 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 WiFiClient espClient;
 PubSubClient client(server, 1883, callback, espClient);
+
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "asia.pool.ntp.org", 19800, 60000);
+
+char t[32];
+byte last_second, second_, minute_, hour_, day_, month_;
+int year_;
+
 
 void reconnect() {
   while (!client.connected()) {
@@ -66,9 +77,13 @@ void setup() {
     client.subscribe("inTopic");
   }
 
-  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  timeClient.begin();  // Start NTP client
+  timeClient.update();  // Retrieve current epoch time from NTP server
+  unsigned long unix_epoch = timeClient.getEpochTime();  // Get epoch time
+  rtc.adjust(DateTime(unix_epoch));  // Set RTC time using NTP epoch time
 
-  delay(1500);
+  DateTime now = rtc.now();
+  last_second = now.second();
 }
 
 void loop() {
@@ -77,19 +92,47 @@ void loop() {
   }
   client.loop();
 
-  DateTime now = rtc.now();
-  Serial.print("ESP32 RTC Date Time: ");
-  Serial.print(now.year(), DEC);
-  Serial.print('/');
-  Serial.print(now.month(), DEC);
-  Serial.print('/');
-  Serial.print(now.day(), DEC);
-  Serial.print(' ');
-  Serial.print(now.hour(), DEC);
-  Serial.print(':');
-  Serial.print(now.minute(), DEC);
-  Serial.print(':');
-  Serial.println(now.second(), DEC);
+  timeClient.update();  // Update time from NTP server
+  unsigned long unix_epoch = timeClient.getEpochTime();  // Get current epoch time
 
-  delay(10000);
+
+  second_ = second(unix_epoch);  // Extract second from epoch time
+  if (last_second != second_)
+  {
+    minute_ = minute(unix_epoch);  // Extract minute from epoch time
+    hour_ = hour(unix_epoch);  // Extract hour from epoch time
+    day_ = day(unix_epoch);  // Extract day from epoch time
+    month_ = month(unix_epoch);  // Extract month from epoch time
+    year_ = year(unix_epoch);  // Extract year from epoch time
+
+
+    // Format and print NTP time on Serial monitor
+    sprintf(t, "NTP Time: %02d:%02d:%02d %02d/%02d/%02d", hour_, minute_, second_, day_, month_, year_);
+    Serial.println(t);
+
+
+    DateTime rtcTime = rtc.now();  // Get current time from RTC
+
+
+    // Format and print RTC time on Serial monitor
+    sprintf(t, "RTC Time: %02d:%02d:%02d %02d/%02d/%02d", rtcTime.hour(), rtcTime.minute(), rtcTime.second(), rtcTime.day(), rtcTime.month(), rtcTime.year());
+    Serial.println(t);
+
+
+    // Compare NTP time with RTC time
+    if (rtcTime == DateTime(year_, month_, day_, hour_, minute_, second_))
+    {
+      Serial.println("Time is synchronized!");  // Print synchronization status
+    }
+    else
+    {
+      Serial.println("Time is not synchronized!");  // Print synchronization status
+    }
+
+
+    last_second = second_;  // Update last second
+  }
+
+
+  delay(1000);  // Delay for 1 second before the next iteration
 }

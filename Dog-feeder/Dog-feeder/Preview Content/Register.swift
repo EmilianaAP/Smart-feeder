@@ -9,7 +9,6 @@ import SwiftUI
 import Firebase
 import FirebaseAuth
 
-
 struct Register: View {
     @State private var showLogin = false
     @State private var first_name: String = ""
@@ -57,6 +56,7 @@ struct Register: View {
                                 createUser()
                             }else{
                             }
+                            showLogin = false
                         }
                         .fixedSize()
                         .foregroundColor(.black)

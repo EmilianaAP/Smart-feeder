@@ -32,7 +32,7 @@
 		007858352B50476A007C0C22 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		00CD65402B0670B0004B8EA4 /* Dog-feeder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dog-feeder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		00CD65432B0670B0004B8EA4 /* Dog_feederApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dog_feederApp.swift; sourceTree = "<group>"; };
-		00CD65452B0670B0004B8EA4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		00CD65452B0670B0004B8EA4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; usesTabs = 0; };
 		00CD65472B0670B1004B8EA4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		00CD654A2B0670B1004B8EA4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6F5DDDBB2214A65C8F958FAB /* Pods-Dog-feeder.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dog-feeder.release.xcconfig"; path = "Target Support Files/Pods-Dog-feeder/Pods-Dog-feeder.release.xcconfig"; sourceTree = "<group>"; };

@@ -11,6 +11,7 @@ import FirebaseAuth
 
 
 struct Login: View {
+    @State private var ID = ""
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var authorization: Bool = false
@@ -22,6 +23,7 @@ struct Login: View {
                 return
             }
             print("Successfully logged in with ID: \(result?.user.uid ?? "")")
+            ID = (result?.user.uid ?? "")
             authorization=true
         }
     }
