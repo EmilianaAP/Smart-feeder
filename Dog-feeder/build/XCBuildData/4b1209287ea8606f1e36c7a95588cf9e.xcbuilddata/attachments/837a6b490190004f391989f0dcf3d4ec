@@ -1,0 +1,5 @@
+ extern const unsigned char Pods_Dog_feederVersionString[];
+ extern const double Pods_Dog_feederVersionNumber;
+
+ const unsigned char Pods_Dog_feederVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:Pods_Dog_feeder  PROJECT:Pods-1" "\n";
+ const double Pods_Dog_feederVersionNumber __attribute__ ((used)) = (double)1.;
