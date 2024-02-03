@@ -16,11 +16,13 @@ struct Login: View {
     @State private var password: String = ""
     @State private var authorization: Bool = false
     @State private var login_error: Bool = false
+    @State private var error_message: String = ""
 
     private func loginUser() {
         Auth.auth().signIn(withEmail: email, password: password) { result, err in
             if let err = err {
                 print("Failed due to error:", err)
+                error_message = err.localizedDescription
                 login_error = true
                 return
             }
@@ -41,7 +43,7 @@ struct Login: View {
                         .padding(.bottom, 10)
                         .font(.system(size: 40))
                     
-                    Text("Invalid email or password")
+                    Text(error_message)
                         .opacity(login_error ? 1 : 0)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding([.leading, .top], 25)
