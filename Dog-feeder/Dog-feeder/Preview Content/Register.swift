@@ -44,7 +44,7 @@ struct Register: View {
                         .font(.system(size: 40))
                     
                     Text(error_message)
-                        .opacity(register_error ? 1 : 1)
+                        .opacity(register_error ? 1 : 0)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding([.leading, .top], 25)
                         .padding(.bottom, -20)
