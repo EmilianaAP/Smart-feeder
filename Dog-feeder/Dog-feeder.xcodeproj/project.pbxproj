@@ -22,6 +22,7 @@
 		00CD65462B0670B0004B8EA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CD65452B0670B0004B8EA4 /* ContentView.swift */; };
 		00CD65482B0670B1004B8EA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00CD65472B0670B1004B8EA4 /* Assets.xcassets */; };
 		00CD654B2B0670B1004B8EA4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00CD654A2B0670B1004B8EA4 /* Preview Assets.xcassets */; };
+		DFD96EA8DB741E05D18F0A73 /* Pods_Dog_feeder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E85D6DED15AEC9B9C8F76B5 /* Pods_Dog_feeder.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,8 +36,9 @@
 		00CD65452B0670B0004B8EA4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; usesTabs = 0; };
 		00CD65472B0670B1004B8EA4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		00CD654A2B0670B1004B8EA4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		6F5DDDBB2214A65C8F958FAB /* Pods-Dog-feeder.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dog-feeder.release.xcconfig"; path = "Target Support Files/Pods-Dog-feeder/Pods-Dog-feeder.release.xcconfig"; sourceTree = "<group>"; };
-		EC18CD6235B67672D3112A25 /* Pods-Dog-feeder.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dog-feeder.debug.xcconfig"; path = "Target Support Files/Pods-Dog-feeder/Pods-Dog-feeder.debug.xcconfig"; sourceTree = "<group>"; };
+		8E85D6DED15AEC9B9C8F76B5 /* Pods_Dog_feeder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dog_feeder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC35234E5029DC99FAAB3A89 /* Pods-Dog-feeder.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dog-feeder.release.xcconfig"; path = "Target Support Files/Pods-Dog-feeder/Pods-Dog-feeder.release.xcconfig"; sourceTree = "<group>"; };
+		BAF1A53274ED0D7FBC032817 /* Pods-Dog-feeder.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dog-feeder.debug.xcconfig"; path = "Target Support Files/Pods-Dog-feeder/Pods-Dog-feeder.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,26 +52,20 @@
 				0078581E2B4C532B007C0C22 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				007858242B4C532B007C0C22 /* FirebaseAppCheck in Frameworks */,
 				007858222B4C532B007C0C22 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				DFD96EA8DB741E05D18F0A73 /* Pods_Dog_feeder.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		007858252B4E93F2007C0C22 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		00CD65372B0670B0004B8EA4 = {
 			isa = PBXGroup;
 			children = (
 				00CD65422B0670B0004B8EA4 /* Dog-feeder */,
 				00CD65412B0670B0004B8EA4 /* Products */,
 				CB9E6E621D0D0DE02D504937 /* Pods */,
-				007858252B4E93F2007C0C22 /* Frameworks */,
+				23F68AD702A969E996261032 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -105,11 +101,19 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		23F68AD702A969E996261032 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8E85D6DED15AEC9B9C8F76B5 /* Pods_Dog_feeder.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CB9E6E621D0D0DE02D504937 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				EC18CD6235B67672D3112A25 /* Pods-Dog-feeder.debug.xcconfig */,
-				6F5DDDBB2214A65C8F958FAB /* Pods-Dog-feeder.release.xcconfig */,
+				BAF1A53274ED0D7FBC032817 /* Pods-Dog-feeder.debug.xcconfig */,
+				AC35234E5029DC99FAAB3A89 /* Pods-Dog-feeder.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -121,10 +125,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00CD654E2B0670B1004B8EA4 /* Build configuration list for PBXNativeTarget "Dog-feeder" */;
 			buildPhases = (
-				74A8D12D13FDB3C528414078 /* [CP] Check Pods Manifest.lock */,
+				038C2DF486D7FAFA14DB5CA0 /* [CP] Check Pods Manifest.lock */,
 				00CD653C2B0670B0004B8EA4 /* Sources */,
 				00CD653D2B0670B0004B8EA4 /* Frameworks */,
 				00CD653E2B0670B0004B8EA4 /* Resources */,
+				AB70106EA2B441383F24BDB8 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -193,7 +198,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		74A8D12D13FDB3C528414078 /* [CP] Check Pods Manifest.lock */ = {
+		038C2DF486D7FAFA14DB5CA0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -213,6 +218,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AB70106EA2B441383F24BDB8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Dog-feeder/Pods-Dog-feeder-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Dog-feeder/Pods-Dog-feeder-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Dog-feeder/Pods-Dog-feeder-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -355,7 +377,7 @@
 		};
 		00CD654F2B0670B1004B8EA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EC18CD6235B67672D3112A25 /* Pods-Dog-feeder.debug.xcconfig */;
+			baseConfigurationReference = BAF1A53274ED0D7FBC032817 /* Pods-Dog-feeder.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -364,6 +386,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Dog-feeder/Preview Content\"";
 				DEVELOPMENT_TEAM = SMRR93A979;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -385,7 +408,7 @@
 		};
 		00CD65502B0670B1004B8EA4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6F5DDDBB2214A65C8F958FAB /* Pods-Dog-feeder.release.xcconfig */;
+			baseConfigurationReference = AC35234E5029DC99FAAB3A89 /* Pods-Dog-feeder.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -394,6 +417,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Dog-feeder/Preview Content\"";
 				DEVELOPMENT_TEAM = SMRR93A979;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

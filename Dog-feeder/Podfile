@@ -6,5 +6,6 @@ target 'Dog-feeder' do
   use_frameworks!
 
   # Pods for Dog-feeder
+  pod 'CocoaMQTT'
 
 end

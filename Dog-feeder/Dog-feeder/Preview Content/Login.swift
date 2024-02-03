@@ -15,11 +15,13 @@ struct Login: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var authorization: Bool = false
+    @State private var login_error: Bool = false
 
     private func loginUser() {
         Auth.auth().signIn(withEmail: email, password: password) { result, err in
             if let err = err {
                 print("Failed due to error:", err)
+                login_error = true
                 return
             }
             print("Successfully logged in with ID: \(result?.user.uid ?? "")")
@@ -39,6 +41,13 @@ struct Login: View {
                         .padding(.bottom, 10)
                         .font(.system(size: 40))
                     
+                    Text("Invalid email or password")
+                        .opacity(login_error ? 1 : 0)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding([.leading, .top], 25)
+                        .padding(.bottom, -20)
+                        .foregroundStyle(.red)
+                    
                     Form {
                         Section(){
                             TextField("Email", text: $email)
@@ -49,7 +58,8 @@ struct Login: View {
                         }
                         
                         Button("Login") {
-                            loginUser()                  }
+                            loginUser()
+                        }
                         .fixedSize()
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity)

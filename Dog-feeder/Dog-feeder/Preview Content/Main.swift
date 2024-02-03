@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import CocoaMQTT
 
 struct Main:View {
     @State private var showProfile = false
@@ -21,7 +22,6 @@ struct Main:View {
     var color1_battery = Color(#colorLiteral(red: 0.54299438, green: 0.9728057981, blue: 0.4297943115, alpha: 1))
     var color2_battery = Color(#colorLiteral(red: 0.399361372, green: 0.9747387767, blue: 0.2709077001, alpha: 1))
     var battery = 80
-    var userID = Auth.auth().currentUser!.uid
     
     var body: some View {
         let multiplier = width / 100
