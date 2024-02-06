@@ -30,7 +30,7 @@ struct Profile:View {
                     .padding([.leading, .bottom], 10)
                 
                 HStack(spacing: 20) {
-                    Text("Age: \n" + age)
+                    Text("Age: \n" + age + " years")
                         .multilineTextAlignment(.center)
                         .padding([.leading, .trailing], 20)
                         .padding([.top, .bottom], 40)
@@ -46,7 +46,7 @@ struct Profile:View {
                         .foregroundColor(.white)
                         .cornerRadius(22)
                     
-                    Text("Weight: \n" + weight)
+                    Text("Weight: \n" + weight + " kg")
                         .multilineTextAlignment(.center)
                         .padding([.leading, .trailing], 20)
                         .padding([.top, .bottom], 40)
