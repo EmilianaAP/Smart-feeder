@@ -18,7 +18,6 @@
 		007858322B5046F3007C0C22 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007858312B5046F3007C0C22 /* Main.swift */; };
 		007858342B50474C007C0C22 /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007858332B50474C007C0C22 /* Register.swift */; };
 		007858362B50476A007C0C22 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007858352B50476A007C0C22 /* Login.swift */; };
-		009EA5AD2B724577002194FA /* MQTT-connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009EA5AC2B724577002194FA /* MQTT-connection.swift */; };
 		00CD65442B0670B0004B8EA4 /* Dog_feederApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CD65432B0670B0004B8EA4 /* Dog_feederApp.swift */; };
 		00CD65462B0670B0004B8EA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CD65452B0670B0004B8EA4 /* ContentView.swift */; };
 		00CD65482B0670B1004B8EA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00CD65472B0670B1004B8EA4 /* Assets.xcassets */; };
@@ -32,7 +31,6 @@
 		007858312B5046F3007C0C22 /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		007858332B50474C007C0C22 /* Register.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Register.swift; sourceTree = "<group>"; };
 		007858352B50476A007C0C22 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
-		009EA5AC2B724577002194FA /* MQTT-connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MQTT-connection.swift"; sourceTree = "<group>"; };
 		00CD65402B0670B0004B8EA4 /* Dog-feeder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dog-feeder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		00CD65432B0670B0004B8EA4 /* Dog_feederApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dog_feederApp.swift; sourceTree = "<group>"; };
 		00CD65452B0670B0004B8EA4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; usesTabs = 0; };
@@ -99,7 +97,6 @@
 				007858312B5046F3007C0C22 /* Main.swift */,
 				007858332B50474C007C0C22 /* Register.swift */,
 				007858352B50476A007C0C22 /* Login.swift */,
-				009EA5AC2B724577002194FA /* MQTT-connection.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -253,7 +250,6 @@
 				007858362B50476A007C0C22 /* Login.swift in Sources */,
 				00CD65442B0670B0004B8EA4 /* Dog_feederApp.swift in Sources */,
 				007858342B50474C007C0C22 /* Register.swift in Sources */,
-				009EA5AD2B724577002194FA /* MQTT-connection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
