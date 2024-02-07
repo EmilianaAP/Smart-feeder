@@ -89,7 +89,6 @@ extension MQTTManager: CocoaMQTTDelegate {
 
 struct Main: View {
     @State private var showProfile = false
-    @ObservedObject var mqttManager = MQTTManager()
     
     var body: some View {
         NavigationStack{
@@ -97,21 +96,7 @@ struct Main: View {
                 Color("Background").ignoresSafeArea(.all)
                 VStack {
                     HStack{
-                        if !mqttManager.isConnected{
-                            Text("No connection to the server :(")
-                                .foregroundStyle(.red)
-                                .bold()
-                                .padding(.leading, 25)
-                            
-                            Button(action: {
-                                mqttManager.connect()
-                            }) {
-                                Image("Profile") //change to refresh when ready
-                                    .resizable()
-                                    .frame(width: 95.0, height: 75.0)
-                                    .padding(.top, 10)
-                            }
-                        }
+                        MQTT_connection()
                         ProfileButton(showProfile: $showProfile)
                     }
                     Spacer()
@@ -124,6 +109,29 @@ struct Main: View {
             
             .navigationDestination(isPresented: $showProfile) {
                 Profile()
+            }
+        }
+    }
+}
+
+struct MQTT_connection: View {
+    @ObservedObject var mqttManager = MQTTManager()
+    
+    var body: some View{
+        HStack{
+            if !mqttManager.isConnected{
+                Text("No connection")
+                    .foregroundStyle(.red)
+                    .bold()
+                    .padding(.leading, 25)
+                
+                Button(action: {
+                    mqttManager.connect()
+                }) {
+                    Image("Refresh")
+                        .resizable()
+                        .frame(width: 15.0, height: 15.0)
+                }
             }
         }
         
