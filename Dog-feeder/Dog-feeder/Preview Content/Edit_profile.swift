@@ -25,13 +25,12 @@ struct Edit_profile: View {
                 Text("Edit your pet's info")
                     .bold()
                     .padding(.top, 120)
-                    .padding(.bottom, 10)
                     .font(.system(size: 40))
                 
                 Text(submit_message)
                     .opacity(submit_result ? 1 : 0)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding([.leading, .top], 25)
+                    .padding(.leading, 25)
                     .padding(.bottom, -20)
                     .foregroundStyle(.red)
                 

@@ -56,15 +56,21 @@ struct Login: View {
                     Text("Login")
                         .bold()
                         .padding(.top, 120)
-                        .padding(.bottom, 10)
                         .font(.system(size: 40))
                     
                     Text(error_message)
                         .opacity(login_error ? 1 : 0)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding([.leading, .top], 25)
-                        .padding(.bottom, -20)
+                        .padding([.leading, .top], 20)
                         .foregroundStyle(.red)
+                    
+                    Button("Forgoten password?") {
+                        resetPassword()
+                    }
+                    .fixedSize()
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 20)
                     
                     Form {
                         Section(){
@@ -84,13 +90,7 @@ struct Login: View {
                         .frame(maxWidth: .infinity)
                     }
                     .scrollContentBackground(.hidden)
-                    
-                    Button("Forgoten password") {
-                        resetPassword()
-                    }
-                    .fixedSize()
-                    .foregroundColor(.black)
-                    .frame(maxWidth: .infinity)
+                    .padding(.top, -10)
                     
                     .navigationDestination(
                         isPresented: $authorization) {
