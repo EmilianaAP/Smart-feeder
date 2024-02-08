@@ -17,6 +17,7 @@ struct Login: View {
     @State private var authorization: Bool = false
     @State private var login_error: Bool = false
     @State private var error_message: String = ""
+    @State private var showingForgottenPasswordAlert = false
 
     private func loginUser() {
         Auth.auth().signIn(withEmail: email, password: password) { result, err in
@@ -28,7 +29,22 @@ struct Login: View {
             }
             print("Successfully logged in with ID: \(result?.user.uid ?? "")")
             ID = (result?.user.uid ?? "")
+            login_error = false
             authorization=true
+        }
+    }
+    
+    private func resetPassword() {
+        Auth.auth().sendPasswordReset(withEmail: email) { error in
+            if let error = error {
+                print("Failed to send password reset email:", error.localizedDescription)
+                error_message = error.localizedDescription
+                login_error = true
+            } else {
+                print("Password reset email sent successfully")
+                error_message = "Password reset email sent successfully"
+                login_error = true
+            }
         }
     }
     
@@ -59,15 +75,22 @@ struct Login: View {
                             SecureField("Password", text: $password)
                         }
                         
+                        
                         Button("Login") {
                             loginUser()
                         }
                         .fixedSize()
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity)
-                        
                     }
-                        .scrollContentBackground(.hidden)
+                    .scrollContentBackground(.hidden)
+                    
+                    Button("Forgoten password") {
+                        resetPassword()
+                    }
+                    .fixedSize()
+                    .foregroundColor(.black)
+                    .frame(maxWidth: .infinity)
                     
                     .navigationDestination(
                         isPresented: $authorization) {

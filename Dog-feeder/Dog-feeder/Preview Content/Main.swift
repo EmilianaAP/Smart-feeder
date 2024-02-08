@@ -148,7 +148,6 @@ struct ProfileButton: View {
             Spacer()
             Button(action: {
                 showProfile = true
-                print("ok")
             }) {
                 Image("Profile")
                     .resizable()
