@@ -106,6 +106,24 @@ func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?, St
     }
 }
 
-
+func deleteData() {
+    print("here")
+    guard let currentUser = Auth.auth().currentUser else {
+        print("No user is currently signed in.")
+        return
+    }
+    let uid = currentUser.uid
+    let db = Firestore.firestore()
+    let docRef = db.collection("pets-info").document(uid)
+    
+    docRef.delete() { err in
+        if let err = err {
+            print("Error removing document: \(err)")
+        }
+        else {
+            print("Document successfully removed!")
+        }
+    }
+}
 
 

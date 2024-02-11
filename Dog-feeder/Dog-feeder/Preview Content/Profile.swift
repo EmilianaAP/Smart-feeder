@@ -16,6 +16,7 @@ struct Profile:View {
     @State private var weight: Float = 0.0
     @State private var location: String = ""
     @State private var showEdit: Bool = false
+    @State private var showContent: Bool = false
     
     func logoutUser() {
         guard let currentUser = Auth.auth().currentUser else {
@@ -29,18 +30,31 @@ struct Profile:View {
         do {
             try Auth.auth().signOut()
             print("User with UID \(uid) successfully signed out.")
-            // If sign out succeeds, navigate to the content view page
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-               let window = windowScene.windows.first {
-                window.rootViewController = UIHostingController(rootView: ContentView())
-                window.makeKeyAndVisible()
-            }
+            showContent = true
+            
         } catch let error as NSError {
             print("Error signing out: \(error.localizedDescription)")
-            // Handle the error appropriately, such as showing an alert to the user.
+            
         }
     }
-
+    
+    func deleteProfile() {
+        guard let currentUser = Auth.auth().currentUser else {
+            print("No user is currently signed in.")
+            return
+        }
+        let uid = currentUser.uid
+        
+        deleteData()
+        currentUser.delete { error in
+          if let error = error {
+            print("Error deleting profile")
+          } else {
+              print("User with UID \(uid) successfully deleted.")
+              showContent = true
+          }
+        }
+    }
     
     var body: some View {
         NavigationStack{
@@ -105,10 +119,25 @@ struct Profile:View {
                     .cornerRadius(22)
                     .font(.system(size: 20))
                     .bold()
+                    
+                    Button("Delete profile") {
+                        deleteProfile()
+                    }
+                    .padding([.leading, .trailing], 28)
+                    .padding([.top, .bottom], 5)
+                    .background(Color("Buttons.Login-Register"))
+                    .foregroundColor(.white)
+                    .cornerRadius(22)
+                    .font(.system(size: 20))
+                    .bold()
                 }
             }
             .navigationDestination(isPresented: $showEdit) {
                 Edit_profile()
+            }
+            .navigationDestination(isPresented: $showContent) {
+                ContentView()
+                    .navigationBarBackButtonHidden(true)
             }
             .onAppear{
                 fetchData { data, name, breed, age, sex, weight, location, error  in
