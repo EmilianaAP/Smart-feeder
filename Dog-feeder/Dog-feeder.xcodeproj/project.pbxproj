@@ -22,6 +22,7 @@
 		009EA5B12B74E2DC002194FA /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 009EA5B02B74E2DC002194FA /* FirebaseFirestore */; };
 		009EA5B32B74E2E8002194FA /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 009EA5B22B74E2E8002194FA /* FirebaseFirestoreSwift */; };
 		009EA5B82B74EECB002194FA /* Firestore_functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009EA5B72B74EECB002194FA /* Firestore_functions.swift */; };
+		009EA5BA2B798690002194FA /* notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009EA5B92B798690002194FA /* notifications.swift */; };
 		00CD65442B0670B0004B8EA4 /* Dog_feederApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CD65432B0670B0004B8EA4 /* Dog_feederApp.swift */; };
 		00CD65462B0670B0004B8EA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CD65452B0670B0004B8EA4 /* ContentView.swift */; };
 		00CD65482B0670B1004B8EA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00CD65472B0670B1004B8EA4 /* Assets.xcassets */; };
@@ -37,6 +38,7 @@
 		007858352B50476A007C0C22 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		009EA5AE2B74BF32002194FA /* Edit_profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Edit_profile.swift; sourceTree = "<group>"; };
 		009EA5B72B74EECB002194FA /* Firestore_functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firestore_functions.swift; sourceTree = "<group>"; };
+		009EA5B92B798690002194FA /* notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = notifications.swift; sourceTree = "<group>"; };
 		00CD65402B0670B0004B8EA4 /* Dog-feeder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dog-feeder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		00CD65432B0670B0004B8EA4 /* Dog_feederApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dog_feederApp.swift; sourceTree = "<group>"; };
 		00CD65452B0670B0004B8EA4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; usesTabs = 0; };
@@ -115,6 +117,7 @@
 				007858332B50474C007C0C22 /* Register.swift */,
 				007858352B50476A007C0C22 /* Login.swift */,
 				009EA5AE2B74BF32002194FA /* Edit_profile.swift */,
+				009EA5B92B798690002194FA /* notifications.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00CD65462B0670B0004B8EA4 /* ContentView.swift in Sources */,
+				009EA5BA2B798690002194FA /* notifications.swift in Sources */,
 				007858302B5046BB007C0C22 /* Profile.swift in Sources */,
 				007858322B5046F3007C0C22 /* Main.swift in Sources */,
 				009EA5AF2B74BF32002194FA /* Edit_profile.swift in Sources */,

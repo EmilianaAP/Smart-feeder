@@ -8,6 +8,7 @@
 import SwiftUI
 import FirebaseAuth
 import CocoaMQTT
+import UserNotifications
 
 class MQTTManager: ObservableObject {
     private var mqtt: CocoaMQTT?
@@ -136,6 +137,14 @@ struct MQTT_connection: View {
         }
         
         .onAppear {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                if success {
+                    print("All set!")
+                } else if let error {
+                    print(error.localizedDescription)
+                }
+            }
+            
             mqttManager.connect()
         }
     }
@@ -143,11 +152,27 @@ struct MQTT_connection: View {
 
 struct ProfileButton: View {
     @Binding var showProfile: Bool
+    @State private var notification_title: String = "Hello"
+    
     var body: some View {
         HStack{
             Spacer()
             Button(action: {
                 showProfile = true
+                
+                let content = UNMutableNotificationContent()
+                content.title = notification_title
+                content.subtitle = "It looks hungry"
+                content.sound = UNNotificationSound.default
+
+                // show this notification five seconds from now
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+
+                // choose a random identifier
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+
+                // add our notification request
+                UNUserNotificationCenter.current().add(request)
             }) {
                 Image("Profile")
                     .resizable()
