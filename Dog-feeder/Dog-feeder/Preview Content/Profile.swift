@@ -10,11 +10,11 @@ import FirebaseAuth
 
 struct Profile:View {
     @State private var name: String = ""
-    @State private var breed: String = "pishka"
-    @State private var age = 3
-    @State private var sex: String = "♂︎"
-    @State private var weight: Float = 20.5
-    @State private var location: String = "Sofia, Bulgaria"
+    @State private var breed: String = ""
+    @State private var age = 0
+    @State private var sex: String = ""
+    @State private var weight: Float = 0.0
+    @State private var location: String = ""
     @State private var showEdit: Bool = false
     
     func logoutUser() {
@@ -105,46 +105,36 @@ struct Profile:View {
                     .cornerRadius(22)
                     .font(.system(size: 20))
                     .bold()
-                    
-                    Button("Fetch Data") {
-                        fetchData { data, name, breed, age, sex, weight, location, error  in
-                            if let error = error {
-                                print("Error fetching data: \(error.localizedDescription)")
-                            } else {
-                                // Update properties with fetched data
-                                if let name = name {
-                                    self.name = name
-                                }
-                                if let breed = breed {
-                                    self.breed = breed
-                                }
-                                if let age = age {
-                                    self.age = age
-                                }
-                                if let sex = sex {
-                                    self.sex = sex
-                                }
-                                if let weight = weight {
-                                    self.weight = weight
-                                }
-                                if let locaion = location {
-                                    self.location = location!
-                                }
-                                // Handle other fetched data if needed
-                            }
-                        }
-                    }
-                    .padding([.leading, .trailing], 51)
-                    .padding([.top, .bottom], 5)
-                    .background(Color("Buttons.Login-Register"))
-                    .foregroundColor(.white)
-                    .cornerRadius(22)
-                    .font(.system(size: 20))
-                    .bold()
                 }
             }
             .navigationDestination(isPresented: $showEdit) {
                 Edit_profile()
+            }
+            .onAppear{
+                fetchData { data, name, breed, age, sex, weight, location, error  in
+                    if let error = error {
+                        print("Error fetching data: \(error.localizedDescription)")
+                    } else {
+                        if let name = name {
+                            self.name = name
+                        }
+                        if let breed = breed {
+                            self.breed = breed
+                        }
+                        if let age = age {
+                            self.age = age
+                        }
+                        if let sex = sex {
+                            self.sex = sex
+                        }
+                        if let weight = weight {
+                            self.weight = weight
+                        }
+                        if let locaion = location {
+                            self.location = location!
+                        }
+                    }
+                }
             }
         }
     }

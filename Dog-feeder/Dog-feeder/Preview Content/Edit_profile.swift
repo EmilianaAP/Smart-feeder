@@ -50,7 +50,7 @@ struct Edit_profile: View {
                     }
                     
                     Button("Submit") {
-                        addData(name: name, breed: breed, age: age, sex: sex, weight: weight, location: location) { message in
+                        addData(name: name, breed: breed, age: Int(age) ?? 0, sex: sex, weight: Float(weight) ?? 0.0, location: location) { message in
                             submit_message = message
                         }
                         submit_result = true
