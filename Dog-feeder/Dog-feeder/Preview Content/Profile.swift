@@ -9,12 +9,12 @@ import SwiftUI
 import FirebaseAuth
 
 struct Profile:View {
-    var name: String = "Erix"
-    var bread: String = "Snauchzer"
-    var age: String = "3"
-    var sex: String = "♂︎"
-    var weight: String = "20.5"
-    var location: String = "Sofia, Bulgaria"
+    @State private var name: String = ""
+    @State private var breed: String = "pishka"
+    @State private var age = 3
+    @State private var sex: String = "♂︎"
+    @State private var weight: Float = 20.5
+    @State private var location: String = "Sofia, Bulgaria"
     @State private var showEdit: Bool = false
     
     func logoutUser() {
@@ -47,7 +47,7 @@ struct Profile:View {
             ZStack{
                 Color("Background").ignoresSafeArea(.all)
                 VStack{
-                    Text(name + " " + sex)
+                    Text(name + " (" + sex + ")")
                         .bold()
                         .font(.system(size: 36))
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -59,7 +59,7 @@ struct Profile:View {
                         .padding([.leading, .bottom], 10)
                     
                     HStack(spacing: 20) {
-                        Text("Age: \n" + age + " years")
+                        Text("Age: \n" + String(age) + " years")
                             .multilineTextAlignment(.center)
                             .padding([.leading, .trailing], 20)
                             .padding([.top, .bottom], 40)
@@ -67,7 +67,7 @@ struct Profile:View {
                             .foregroundColor(.white)
                             .cornerRadius(22)
                         
-                        Text("Bread: \n" + bread)
+                        Text("Bread: \n" + breed)
                             .multilineTextAlignment(.center)
                             .padding([.leading, .trailing], 20)
                             .padding([.top, .bottom], 40)
@@ -75,7 +75,7 @@ struct Profile:View {
                             .foregroundColor(.white)
                             .cornerRadius(22)
                         
-                        Text("Weight: \n" + weight + " kg")
+                        Text("Weight: \n" + String(weight) + " kg")
                             .multilineTextAlignment(.center)
                             .padding([.leading, .trailing], 20)
                             .padding([.top, .bottom], 40)
@@ -107,12 +107,30 @@ struct Profile:View {
                     .bold()
                     
                     Button("Fetch Data") {
-                        fetchData { data, error in
+                        fetchData { data, name, breed, age, sex, weight, location, error  in
                             if let error = error {
                                 print("Error fetching data: \(error.localizedDescription)")
-                            } else if let data = data {
-                                // Handle the fetched data
-                                print("Fetched data: \(data)")
+                            } else {
+                                // Update properties with fetched data
+                                if let name = name {
+                                    self.name = name
+                                }
+                                if let breed = breed {
+                                    self.breed = breed
+                                }
+                                if let age = age {
+                                    self.age = age
+                                }
+                                if let sex = sex {
+                                    self.sex = sex
+                                }
+                                if let weight = weight {
+                                    self.weight = weight
+                                }
+                                if let locaion = location {
+                                    self.location = location!
+                                }
+                                // Handle other fetched data if needed
                             }
                         }
                     }
