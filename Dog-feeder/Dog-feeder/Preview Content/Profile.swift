@@ -105,6 +105,24 @@ struct Profile:View {
                     .cornerRadius(22)
                     .font(.system(size: 20))
                     .bold()
+                    
+                    Button("Fetch Data") {
+                        fetchData { data, error in
+                            if let error = error {
+                                print("Error fetching data: \(error.localizedDescription)")
+                            } else if let data = data {
+                                // Handle the fetched data
+                                print("Fetched data: \(data)")
+                            }
+                        }
+                    }
+                    .padding([.leading, .trailing], 51)
+                    .padding([.top, .bottom], 5)
+                    .background(Color("Buttons.Login-Register"))
+                    .foregroundColor(.white)
+                    .cornerRadius(22)
+                    .font(.system(size: 20))
+                    .bold()
                 }
             }
             .navigationDestination(isPresented: $showEdit) {
