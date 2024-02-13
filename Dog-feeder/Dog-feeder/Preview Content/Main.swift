@@ -54,31 +54,38 @@ extension MQTTManager: CocoaMQTTDelegate {
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didPublishMessage message: CocoaMQTTMessage, id: UInt16) {
-        // Handle published message if needed
+        
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didPublishAck id: UInt16) {
-        // Handle published acknowledgment if needed
+        
     }
     
-    func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16) {
+    func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message:
+        CocoaMQTTMessage, id: UInt16) {
         self.message = message.string ?? ""
+        
+        let content = UNMutableNotificationContent()
+        content.title = message.topic 
+        content.subtitle = message.string ?? ""
+        content.sound = UNNotificationSound.default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+
+        UNUserNotificationCenter.current().add(request)
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopics success: NSDictionary, failed: [String]) {
-        // Handle subscription success or failure if needed
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didUnsubscribeTopics topics: [String]) {
-        // Handle unsubscription if needed
     }
     
     func mqttDidPing(_ mqtt: CocoaMQTT) {
-        // Handle ping event if needed
     }
     
     func mqttDidReceivePong(_ mqtt: CocoaMQTT) {
-        // Handle pong event if needed
     }
     
     func mqttDidDisconnect(_ mqtt: CocoaMQTT, withError err: Error?) {
@@ -152,27 +159,12 @@ struct MQTT_connection: View {
 
 struct ProfileButton: View {
     @Binding var showProfile: Bool
-    @State private var notification_title: String = "Hello"
     
     var body: some View {
         HStack{
             Spacer()
             Button(action: {
                 showProfile = true
-                
-                let content = UNMutableNotificationContent()
-                content.title = notification_title
-                content.subtitle = "It looks hungry"
-                content.sound = UNNotificationSound.default
-
-                // show this notification five seconds from now
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-
-                // choose a random identifier
-                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-
-                // add our notification request
-                UNUserNotificationCenter.current().add(request)
             }) {
                 Image("Profile")
                     .resizable()

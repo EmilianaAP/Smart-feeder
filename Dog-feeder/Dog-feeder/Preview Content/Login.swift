@@ -63,7 +63,7 @@ struct Login: View {
                         .padding([.leading, .top], 20)
                         .foregroundStyle(.red)
                     
-                    Button("Forgoten password?") {
+                    Button("Forgotten password?") {
                         resetPassword()
                     }
                     .fixedSize()

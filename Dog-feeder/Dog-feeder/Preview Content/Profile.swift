@@ -159,7 +159,7 @@ struct Profile:View {
                         if let weight = weight {
                             self.weight = weight
                         }
-                        if let locaion = location {
+                        if location != nil {
                             self.location = location!
                         }
                     }

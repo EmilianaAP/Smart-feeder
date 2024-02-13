@@ -8,7 +8,8 @@
 import FirebaseFirestore
 import FirebaseAuth
 
-func addData(name: String, breed: String, age: Int, sex: String, weight: Float, location: String, completion: @escaping (String) -> Void) {
+func addData(name: String, breed: String, age: Int, sex: String, weight: Float, 
+             location: String, completion: @escaping (String) -> Void) {
     guard let user = Auth.auth().currentUser else {
         print("User not authenticated.")
         completion("User not authenticated.")
@@ -49,7 +50,8 @@ func addData(name: String, breed: String, age: Int, sex: String, weight: Float, 
 }
 
 
-func createOrUpdateDocument(collection: String, documentID: String, data: [String: Any], completion: @escaping (Error?) -> Void) {
+func createOrUpdateDocument(collection: String, documentID: String, 
+                            data: [String: Any], completion: @escaping (Error?) -> Void) {
     let db = Firestore.firestore()
     let docRef = db.collection(collection).document(documentID)
 
@@ -65,7 +67,8 @@ func createOrUpdateDocument(collection: String, documentID: String, data: [Strin
 }
 
 
-func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?, String?, Float?, String?, Error?) -> Void) {
+func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?, 
+                                      String?, Float?, String?, Error?) -> Void) {
     guard let user = Auth.auth().currentUser else {
         print("User not authenticated.")
         let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "User not authenticated"])
@@ -96,7 +99,8 @@ func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?, St
             } else {
                 // If the "name" field does not exist or its value cannot be cast to a String, handle the error or set a default value
                 print("Error: 'name' field not found or has invalid type.")
-                completion(nil, nil, nil, nil, nil, nil, nil, NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Name field not found"]))
+                completion(nil, nil, nil, nil, nil, nil, nil, NSError(domain: "", code: -1, 
+                                                                      userInfo: [NSLocalizedDescriptionKey: "Name field not found"]))
             }
         } else {
             let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Document does not exist"])

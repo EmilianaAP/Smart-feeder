@@ -12,7 +12,7 @@ struct ContentView: View {
     @State private var showRegister: Bool = false
     
     var body: some View {
-        NavigationStack {
+        NavigationView {
             ZStack {
                 Color("Background").ignoresSafeArea(.all)
                 
@@ -30,8 +30,8 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    Button("Login") {
-                        showLogin = true
+                    NavigationLink(destination: Login()) {
+                        Text("Login")
                     }
                     .padding(.leading, 50)
                     .padding(.trailing, 50)
@@ -43,8 +43,8 @@ struct ContentView: View {
                     .padding(.bottom, 15)
                     .font(.system(size: 20))
                     
-                    Button("Register") {
-                        showRegister = true
+                    NavigationLink(destination: Register()) {
+                        Text("Register")
                     }
                     .padding(.leading, 38)
                     .padding(.trailing, 38)
@@ -58,16 +58,6 @@ struct ContentView: View {
                     
                     Spacer()
                 }
-                
-                .navigationDestination(
-                     isPresented: $showLogin) {
-                          Login()
-                     }
-                .navigationDestination(
-                     isPresented: $showRegister) {
-                          Register()
-                     }
-                
             }
         }.tint(.black)
     }
