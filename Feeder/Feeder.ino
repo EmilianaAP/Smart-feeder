@@ -27,7 +27,7 @@ WiFiClient espClient;
 PubSubClient client(server, 1883, callback, espClient);
 
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "asia.pool.ntp.org", 19800, 60000);
+NTPClient timeClient(ntpUDP, "asia.pool.ntp.org", 7200, 60000);
 
 char t[32];
 byte last_second, second_, minute_, hour_, day_, month_;
