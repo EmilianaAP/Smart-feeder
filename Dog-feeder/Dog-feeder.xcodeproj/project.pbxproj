@@ -28,6 +28,7 @@
 		00CD65482B0670B1004B8EA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00CD65472B0670B1004B8EA4 /* Assets.xcassets */; };
 		00CD654B2B0670B1004B8EA4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00CD654A2B0670B1004B8EA4 /* Preview Assets.xcassets */; };
 		00F519F02B7C3356003C06CA /* Add_food.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F519EF2B7C3356003C06CA /* Add_food.swift */; };
+		00F519F32B7D7376003C06CA /* MQTT_functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F519F22B7D7376003C06CA /* MQTT_functions.swift */; };
 		DFD96EA8DB741E05D18F0A73 /* Pods_Dog_feeder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E85D6DED15AEC9B9C8F76B5 /* Pods_Dog_feeder.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +47,7 @@
 		00CD65472B0670B1004B8EA4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		00CD654A2B0670B1004B8EA4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		00F519EF2B7C3356003C06CA /* Add_food.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Add_food.swift; sourceTree = "<group>"; };
+		00F519F22B7D7376003C06CA /* MQTT_functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MQTT_functions.swift; sourceTree = "<group>"; };
 		8E85D6DED15AEC9B9C8F76B5 /* Pods_Dog_feeder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dog_feeder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC35234E5029DC99FAAB3A89 /* Pods-Dog-feeder.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dog-feeder.release.xcconfig"; path = "Target Support Files/Pods-Dog-feeder/Pods-Dog-feeder.release.xcconfig"; sourceTree = "<group>"; };
 		BAF1A53274ED0D7FBC032817 /* Pods-Dog-feeder.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dog-feeder.debug.xcconfig"; path = "Target Support Files/Pods-Dog-feeder/Pods-Dog-feeder.debug.xcconfig"; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 		00CD65422B0670B0004B8EA4 /* Dog-feeder */ = {
 			isa = PBXGroup;
 			children = (
+				00F519F12B7D735D003C06CA /* MQTT */,
 				009EA5B62B74EE6F002194FA /* Firebase Contents */,
 				00CD65432B0670B0004B8EA4 /* Dog_feederApp.swift */,
 				00CD65452B0670B0004B8EA4 /* ContentView.swift */,
@@ -123,6 +126,14 @@
 				00F519EF2B7C3356003C06CA /* Add_food.swift */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		00F519F12B7D735D003C06CA /* MQTT */ = {
+			isa = PBXGroup;
+			children = (
+				00F519F22B7D7376003C06CA /* MQTT_functions.swift */,
+			);
+			path = MQTT;
 			sourceTree = "<group>";
 		};
 		23F68AD702A969E996261032 /* Frameworks */ = {
@@ -274,6 +285,7 @@
 				007858302B5046BB007C0C22 /* Profile.swift in Sources */,
 				007858322B5046F3007C0C22 /* Main.swift in Sources */,
 				00F519F02B7C3356003C06CA /* Add_food.swift in Sources */,
+				00F519F32B7D7376003C06CA /* MQTT_functions.swift in Sources */,
 				009EA5AF2B74BF32002194FA /* Edit_profile.swift in Sources */,
 				009EA5BC2B798FF4002194FA /* test.swift in Sources */,
 				009EA5B82B74EECB002194FA /* Firestore_functions.swift in Sources */,
