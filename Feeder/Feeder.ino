@@ -45,6 +45,10 @@ NTPClient timeClient(ntpUDP, "asia.pool.ntp.org", 7200, 60000);
 hw_timer_t *timer1 = NULL;
 TMC2209Stepper driver(&SERIAL_PORT, R_SENSE, DRIVER_ADDRESS);
 
+// Movement control variables
+bool isMoving = false;
+unsigned long moveStartTime = 0;
+
 // Callback function for MQTT messages
 void callback(char* topic, byte* payload, unsigned int length) {
   String response;
@@ -204,17 +208,25 @@ void reconnect() {
 
 // Function to control stepper motor
 void controlStepper() {
-  bool dir = 0;
-  digitalWrite(EN_PIN, LOW);
-  static uint32_t last_time = 0;
-  uint32_t ms = millis();
-  if ((ms - last_time) > 100) {
-    last_time = ms;
-    digitalWrite(DIR_PIN, dir);
-    Serial.print("0 ");
-    Serial.print(driver.SG_RESULT(), DEC);
-    Serial.print(" ");
-    Serial.println(driver.cs2rms(driver.cs_actual()), DEC);
+  unsigned long currentMillis = millis();
+  if (isMoving) {
+    // Move for 10 seconds
+    if (currentMillis - moveStartTime < 10000) {
+      digitalWrite(EN_PIN, LOW); // Enable motor
+      digitalWrite(DIR_PIN, LOW); // Set direction
+      digitalWrite(STEP_PIN, !digitalRead(STEP_PIN)); // Step
+    } else {
+      // After 10 seconds, rest for 5 seconds
+      digitalWrite(EN_PIN, HIGH); // Disable motor
+      isMoving = false;
+      moveStartTime = currentMillis;
+    }
+  } else {
+    // Rest for 5 seconds
+    if (currentMillis - moveStartTime >= 5000) {
+      isMoving = true;
+      moveStartTime = currentMillis;
+    }
   }
 }
 
