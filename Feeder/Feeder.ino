@@ -1,20 +1,54 @@
 #include <Wire.h>
 #include <RTClib.h>
 #include <WiFiManager.h>
-#include <SPI.h>
 #include <PubSubClient.h>
 #include <WifiUdp.h>
 #include <NTPClient.h>
 #include <TimeLib.h>
+#include <TMCStepper.h>
+#include <SPI.h>
 
+// Pin Definitions
+#define SW_RX       17 // TMC2208/TMC2224 SoftwareSerial receive pin
+#define SW_TX       16 // TMC2208/TMC2224 SoftwareSerial transmit pin
+#define EN_PIN      18 // LOW: Driver enabled. HIGH: Driver disabled
+#define STEP_PIN    5  // Step on rising edge
+#define DIR_PIN     4  // Step on rising edge
+
+// Constants
+#define R_SENSE           0.11f // R_SENSE for current calc.
+#define STALL_VALUE       2     // [0..255]
+#define DRIVER_ADDRESS    0b00  // TMC2209 Driver address according to MS1 and MS2
+#define SERIAL_PORT       Serial2 // TMC2208/TMC2224 HardwareSerial port
+
+// Function prototypes
+void callback(char* topic, byte* payload, unsigned int length);
+void setupPins();
+void setupSerial();
+void setupRTC();
+void setupWiFi();
+void setupMQTT();
+void setupStepper();
+void onTimer();
+void reconnect();
+void controlStepper();
+void handleMQTT();
+void setupInterrupt();
+
+// Objects and Variables
 RTC_DS3231 rtc;
 IPAddress server(34, 122, 107, 45);
+WiFiClient espClient;
+PubSubClient client(server, 1883, callback, espClient);
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "asia.pool.ntp.org", 7200, 60000);
+hw_timer_t *timer1 = NULL;
+TMC2209Stepper driver(&SERIAL_PORT, R_SENSE, DRIVER_ADDRESS);
 
+// Callback function for MQTT messages
 void callback(char* topic, byte* payload, unsigned int length) {
   String response;
-
-  for (int i = 0; i < length; i++)
-  {
+  for (int i = 0; i < length; i++) {
     response += (char)payload[i];
   }
   Serial.print("Message arrived [");
@@ -23,17 +57,135 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println(response);
 }
 
-WiFiClient espClient;
-PubSubClient client(server, 1883, callback, espClient);
+void setup() {
+  setupPins();
+  setupSerial();
+  setupRTC();
+  setupWiFi();
+  setupMQTT();
 
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "asia.pool.ntp.org", 7200, 60000);
+  timeClient.begin();  
+  timeClient.update();  
+  unsigned long unix_epoch = timeClient.getEpochTime();  
+  rtc.adjust(DateTime(unix_epoch));  
 
-char t[32];
-byte last_second, second_, minute_, hour_, day_, month_;
-int year_;
+  DateTime now = rtc.now();
+  setupStepper();
+  setupInterrupt();
+}
 
+void loop() {
+  controlStepper();
+  handleMQTT();
 
+  timeClient.update();  
+  unsigned long unix_epoch = timeClient.getEpochTime();  
+
+  static byte last_second = 0;
+  byte second_ = second(unix_epoch);  
+  if (last_second != second_) {
+    last_second = second_;  
+
+    byte minute_ = minute(unix_epoch);  
+    byte hour_ = hour(unix_epoch);  
+    byte day_ = day(unix_epoch);  
+    byte month_ = month(unix_epoch);  
+    int year_ = year(unix_epoch);  
+
+    char t[32];
+    sprintf(t, "NTP Time: %02d:%02d:%02d %02d/%02d/%02d", hour_, minute_, second_, day_, month_, year_);
+    Serial.println(t);
+
+    DateTime rtcTime = rtc.now();  
+    sprintf(t, "RTC Time: %02d:%02d:%02d %02d/%02d/%02d", rtcTime.hour(), rtcTime.minute(), rtcTime.second(), rtcTime.day(), rtcTime.month(), rtcTime.year());
+    Serial.println(t);
+
+    if (rtcTime == DateTime(year_, month_, day_, hour_, minute_, second_)) {
+      Serial.println("Time is synchronized!");
+    } else {
+      Serial.println("Time is not synchronized!");
+    }
+  }
+
+  delay(1000);
+}
+
+// Function to set up pins
+void setupPins() {
+  Wire.begin(26, 27);
+  pinMode(EN_PIN, OUTPUT);
+  pinMode(STEP_PIN, OUTPUT);
+  pinMode(DIR_PIN, OUTPUT);
+  digitalWrite(EN_PIN, LOW);
+  digitalWrite(DIR_PIN, LOW);
+}
+
+// Function to set up serial communication
+void setupSerial() {
+  Serial.begin(115200);
+  while (!Serial);
+  SERIAL_PORT.begin(115200, SERIAL_8N1);
+}
+
+// Function to set up real-time clock
+void setupRTC() {
+  if (!rtc.begin()) {
+    Serial.println("RTC module is NOT found");
+    Serial.flush();
+    while (1);
+  }
+}
+
+// Function to set up WiFi connection
+void setupWiFi() {
+  WiFiManager wm;
+  bool res = wm.autoConnect("AutoConnectAP", "password");
+  if (!res) {
+    Serial.println("Failed to connect");
+  } else {
+    Serial.println("connected...yeey :)");
+  }
+}
+
+// Function to set up MQTT connection
+void setupMQTT() {
+  if (client.connect("arduinoClient", "Erix", "!!SmartPet!!")) {
+    client.publish("outTopic", "hello world");
+    client.subscribe("inTopic");
+  }
+}
+
+// Function to set up stepper motor
+void setupStepper() {
+  driver.begin();
+  driver.toff(4);
+  driver.blank_time(24);
+  driver.rms_current(500);
+  driver.microsteps(16);
+  driver.TCOOLTHRS(0xFFFFF); 
+  driver.semin(0);
+  driver.semax(2);
+  driver.shaft(false);
+  driver.sedn(0b01);
+  driver.SGTHRS(STALL_VALUE);
+}
+
+// Function for interrupt setup
+void setupInterrupt() {
+  cli();
+  timer1 = timerBegin(3, 8, true);
+  timerAttachInterrupt(timer1, &onTimer, true);
+  timerAlarmWrite(timer1, 8000, true);
+  timerAlarmEnable(timer1);
+  sei();
+}
+
+// Timer interrupt function
+void IRAM_ATTR onTimer() {
+  digitalWrite(STEP_PIN, !digitalRead(STEP_PIN));
+} 
+
+// Function to reconnect MQTT client
 void reconnect() {
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
@@ -50,89 +202,26 @@ void reconnect() {
   }
 }
 
-void setup() {
-  Wire.begin(5,4);
-  Serial.begin(115200);
-
-  if (! rtc.begin()) {
-    Serial.println("RTC module is NOT found");
-    Serial.flush();
-    while (1);
+// Function to control stepper motor
+void controlStepper() {
+  bool dir = 0;
+  digitalWrite(EN_PIN, LOW);
+  static uint32_t last_time = 0;
+  uint32_t ms = millis();
+  if ((ms - last_time) > 100) {
+    last_time = ms;
+    digitalWrite(DIR_PIN, dir);
+    Serial.print("0 ");
+    Serial.print(driver.SG_RESULT(), DEC);
+    Serial.print(" ");
+    Serial.println(driver.cs2rms(driver.cs_actual()), DEC);
   }
-
-  WiFiManager wm;
-  bool res;
-  res = wm.autoConnect("AutoConnectAP","password");
-
-  if(!res) {
-      Serial.println("Failed to connect");
-  } 
-  else {  
-      Serial.println("connected...yeey :)");
-  }
-
-
-  if (client.connect("arduinoClient", "Erix", "!!SmartPet!!")) {
-    client.publish("outTopic","hello world");
-    client.subscribe("inTopic");
-  }
-
-  timeClient.begin();  // Start NTP client
-  timeClient.update();  // Retrieve current epoch time from NTP server
-  unsigned long unix_epoch = timeClient.getEpochTime();  // Get epoch time
-  rtc.adjust(DateTime(unix_epoch));  // Set RTC time using NTP epoch time
-
-  DateTime now = rtc.now();
-  last_second = now.second();
 }
 
-void loop() {
+// Function to handle MQTT messages
+void handleMQTT() {
   if (!client.connected()) {
     reconnect();
   }
   client.loop();
-
-  timeClient.update();  // Update time from NTP server
-  unsigned long unix_epoch = timeClient.getEpochTime();  // Get current epoch time
-
-
-  second_ = second(unix_epoch);  // Extract second from epoch time
-  if (last_second != second_)
-  {
-    minute_ = minute(unix_epoch);  // Extract minute from epoch time
-    hour_ = hour(unix_epoch);  // Extract hour from epoch time
-    day_ = day(unix_epoch);  // Extract day from epoch time
-    month_ = month(unix_epoch);  // Extract month from epoch time
-    year_ = year(unix_epoch);  // Extract year from epoch time
-
-
-    // Format and print NTP time on Serial monitor
-    sprintf(t, "NTP Time: %02d:%02d:%02d %02d/%02d/%02d", hour_, minute_, second_, day_, month_, year_);
-    Serial.println(t);
-
-
-    DateTime rtcTime = rtc.now();  // Get current time from RTC
-
-
-    // Format and print RTC time on Serial monitor
-    sprintf(t, "RTC Time: %02d:%02d:%02d %02d/%02d/%02d", rtcTime.hour(), rtcTime.minute(), rtcTime.second(), rtcTime.day(), rtcTime.month(), rtcTime.year());
-    Serial.println(t);
-
-
-    // Compare NTP time with RTC time
-    if (rtcTime == DateTime(year_, month_, day_, hour_, minute_, second_))
-    {
-      Serial.println("Time is synchronized!");  // Print synchronization status
-    }
-    else
-    {
-      Serial.println("Time is not synchronized!");  // Print synchronization status
-    }
-
-
-    last_second = second_;  // Update last second
-  }
-
-
-  delay(1000);  // Delay for 1 second before the next iteration
 }
