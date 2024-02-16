@@ -46,7 +46,7 @@ struct Add_food: View {
                     let formatted_time = formatter.string(from: picked_time)
                     print(formatted_time)
                     
-                    mqttManager.publish(topic: "/test_3", message: formatted_time)
+                    mqttManager.publish(topic: "time-to-feed", message: formatted_time)
                 }
                 .padding([.leading, .trailing], 38)
                 .padding([.top, .bottom], 5)

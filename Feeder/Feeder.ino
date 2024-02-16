@@ -48,6 +48,8 @@ TMC2209Stepper driver(&SERIAL_PORT, R_SENSE, DRIVER_ADDRESS);
 // Movement control variables
 unsigned long moveStartTime = 0;
 bool startMotor = false; // Flag to start motor based on MQTT command
+byte storedHour = 0;
+byte storedMinute = 0;
 
 // Callback function for MQTT messages
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -60,13 +62,19 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("] ");
   Serial.println(response);
 
-  // Check MQTT topic and payload to determine action
-  if (strcmp(topic, "startMotorTopic") == 0) {
+  if (strcmp(topic, "time-to-feed") == 0) {
     Serial.println("on topic");
     if (response.equals("start")) {
       Serial.println("Start");
       startMotor = true; // Set flag to start motor
       moveStartTime = millis(); // Record the start time
+    } else {
+      // Parse the time in HH:MM format
+      int pos = response.indexOf(':');
+      if (pos > 0 && pos < response.length() - 1) {
+        storedHour = response.substring(0, pos).toInt();
+        storedMinute = response.substring(pos + 1).toInt();
+      }
     }
   }
 }
@@ -95,6 +103,21 @@ void loop() {
   Serial.print("startMotor flag: ");
   Serial.println(startMotor);
 
+  // Get current time
+  timeClient.update();  
+  unsigned long unix_epoch = timeClient.getEpochTime();  
+  byte minute_ = minute(unix_epoch);  
+  byte hour_ = hour(unix_epoch);  
+
+  // Check if the current time matches the stored time
+  if (storedHour == hour_ && storedMinute == minute_) {
+    startMotor = true; // Set flag to start motor
+    moveStartTime = millis(); // Record the start time
+    // Clear the stored time
+    storedHour = 0;
+    storedMinute = 0;
+  }
+
   if (startMotor) {
     Serial.println("Starting motor movement...");
     controlStepper(); // Debugging: Print when controlStepper() is called
@@ -109,26 +132,13 @@ void loop() {
     digitalWrite(EN_PIN, HIGH); 
   }
 
-  timeClient.update();  
-  unsigned long unix_epoch = timeClient.getEpochTime();  
+  static byte last_minute = 0;
+  if (last_minute != minute_) {
+    last_minute = minute_;  
 
-  static byte last_second = 0;
-  byte second_ = second(unix_epoch);  
-  if (last_second != second_) {
-    last_second = second_;  
-
-    byte minute_ = minute(unix_epoch);  
-    byte hour_ = hour(unix_epoch);  
-    byte day_ = day(unix_epoch);  
-    byte month_ = month(unix_epoch);  
-    int year_ = year(unix_epoch);  
-
-    char t[32];
-    
-
+    // Check if RTC time is synchronized
     DateTime rtcTime = rtc.now();  
-
-    if (rtcTime != DateTime(year_, month_, day_, hour_, minute_, second_)) {
+    if (rtcTime != DateTime(year(unix_epoch), month(unix_epoch), day(unix_epoch), hour_, minute_, 0)) {
       Serial.println("Time is not synchronized!");
     }
   }
@@ -178,7 +188,7 @@ void setupMQTT() {
   if (client.connect("arduinoClient", "Erix", "!!SmartPet!!")) {
     client.publish("outTopic", "hello world");
     client.subscribe("inTopic");
-    client.subscribe("startMotorTopic");
+    client.subscribe("time-to-feed");
   }
 }
 
