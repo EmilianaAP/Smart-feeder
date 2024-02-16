@@ -46,8 +46,8 @@ hw_timer_t *timer1 = NULL;
 TMC2209Stepper driver(&SERIAL_PORT, R_SENSE, DRIVER_ADDRESS);
 
 // Movement control variables
-bool isMoving = false;
 unsigned long moveStartTime = 0;
+bool startMotor = false; // Flag to start motor based on MQTT command
 
 // Callback function for MQTT messages
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -59,6 +59,16 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print(topic);
   Serial.print("] ");
   Serial.println(response);
+
+  // Check MQTT topic and payload to determine action
+  if (strcmp(topic, "startMotorTopic") == 0) {
+    Serial.println("on topic");
+    if (response.equals("start")) {
+      Serial.println("Start");
+      startMotor = true; // Set flag to start motor
+      moveStartTime = millis(); // Record the start time
+    }
+  }
 }
 
 void setup() {
@@ -79,8 +89,25 @@ void setup() {
 }
 
 void loop() {
-  controlStepper();
   handleMQTT();
+
+  // Debugging: Print the state of the startMotor flag
+  Serial.print("startMotor flag: ");
+  Serial.println(startMotor);
+
+  if (startMotor) {
+    Serial.println("Starting motor movement...");
+    controlStepper(); // Debugging: Print when controlStepper() is called
+    
+    // Check if 10 seconds have elapsed since motor movement started
+    if (millis() - moveStartTime >= 10000) {
+      Serial.println("Motor movement completed.");
+      startMotor = false; // Reset the flag
+    }
+  } else {
+    Serial.println("Motor not moving");
+    digitalWrite(EN_PIN, HIGH); 
+  }
 
   timeClient.update();  
   unsigned long unix_epoch = timeClient.getEpochTime();  
@@ -97,16 +124,11 @@ void loop() {
     int year_ = year(unix_epoch);  
 
     char t[32];
-    sprintf(t, "NTP Time: %02d:%02d:%02d %02d/%02d/%02d", hour_, minute_, second_, day_, month_, year_);
-    Serial.println(t);
+    
 
     DateTime rtcTime = rtc.now();  
-    sprintf(t, "RTC Time: %02d:%02d:%02d %02d/%02d/%02d", rtcTime.hour(), rtcTime.minute(), rtcTime.second(), rtcTime.day(), rtcTime.month(), rtcTime.year());
-    Serial.println(t);
 
-    if (rtcTime == DateTime(year_, month_, day_, hour_, minute_, second_)) {
-      Serial.println("Time is synchronized!");
-    } else {
+    if (rtcTime != DateTime(year_, month_, day_, hour_, minute_, second_)) {
       Serial.println("Time is not synchronized!");
     }
   }
@@ -156,6 +178,7 @@ void setupMQTT() {
   if (client.connect("arduinoClient", "Erix", "!!SmartPet!!")) {
     client.publish("outTopic", "hello world");
     client.subscribe("inTopic");
+    client.subscribe("startMotorTopic");
   }
 }
 
@@ -208,26 +231,9 @@ void reconnect() {
 
 // Function to control stepper motor
 void controlStepper() {
-  unsigned long currentMillis = millis();
-  if (isMoving) {
-    // Move for 10 seconds
-    if (currentMillis - moveStartTime < 10000) {
-      digitalWrite(EN_PIN, LOW); // Enable motor
-      digitalWrite(DIR_PIN, LOW); // Set direction
-      digitalWrite(STEP_PIN, !digitalRead(STEP_PIN)); // Step
-    } else {
-      // After 10 seconds, rest for 5 seconds
-      digitalWrite(EN_PIN, HIGH); // Disable motor
-      isMoving = false;
-      moveStartTime = currentMillis;
-    }
-  } else {
-    // Rest for 5 seconds
-    if (currentMillis - moveStartTime >= 5000) {
-      isMoving = true;
-      moveStartTime = currentMillis;
-    }
-  }
+  digitalWrite(EN_PIN, LOW); // Enable motor
+  digitalWrite(DIR_PIN, LOW); // Set direction
+  digitalWrite(STEP_PIN, HIGH); // Step
 }
 
 // Function to handle MQTT messages
