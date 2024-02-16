@@ -111,7 +111,6 @@ func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?,
 }
 
 func deleteData() {
-    print("here")
     guard let currentUser = Auth.auth().currentUser else {
         print("No user is currently signed in.")
         return
@@ -130,4 +129,65 @@ func deleteData() {
     }
 }
 
+func addNotification(lastFiveMessages: [String] = []) {
+    guard let user = Auth.auth().currentUser else {
+        print("User not authenticated.")
+        return
+    }
 
+    let uid = user.uid
+    let db = Firestore.firestore()
+    let notificationsRef = db.collection("notifications").document(uid)
+
+    // Fetch existing notifications
+    notificationsRef.getDocument { document, error in
+        if let error = error {
+            print("Error fetching existing notifications: \(error.localizedDescription)")
+            return
+        }
+
+        var existingMessages = document?.data()?["messages"] as? [String] ?? []
+
+        // Append new messages to existing ones
+        existingMessages.append(contentsOf: lastFiveMessages)
+
+        // Update the document with the expanded array
+        notificationsRef.setData(["messages": existingMessages]) { error in
+            if let error = error {
+                print("Error updating notifications: \(error.localizedDescription)")
+            } else {
+                print("Notifications updated successfully.")
+            }
+        }
+    }
+}
+
+
+func fetchNotifications(completion: @escaping ([String]?, Error?) -> Void) {
+    guard let currentUser = Auth.auth().currentUser else {
+        completion(nil, NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "User not authenticated"]))
+        return
+    }
+    
+    let uid = currentUser.uid
+    let db = Firestore.firestore()
+    let docRef = db.collection("notifications").document(uid)
+    
+    docRef.getDocument { document, error in
+        if let error = error {
+            completion(nil, error)
+            return
+        }
+        
+        if let document = document, document.exists {
+            let data = document.data()
+            if let messages = data?["messages"] as? [String] {
+                completion(messages, nil)
+            } else {
+                completion(nil, NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Messages not found in document"]))
+            }
+        } else {
+            completion(nil, NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Document does not exist"]))
+        }
+    }
+}

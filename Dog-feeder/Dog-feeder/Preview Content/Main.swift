@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseAuth
 
 struct Main: View {
+    @StateObject private var mqttManager = MQTTManager()
     @State private var showProfile = false
     
     var body: some View {
@@ -17,7 +18,7 @@ struct Main: View {
                 Color("Background").ignoresSafeArea(.all)
                 VStack {
                     HStack{
-                        MQTT_connection()
+                        MQTT_connection(mqttManager: mqttManager)
                         ProfileButton(showProfile: $showProfile)
                     }
                     Spacer()
@@ -177,16 +178,28 @@ struct LevelView: View {
 }
 
 struct NotificationListView: View {
+    @State var notifications: [String] = []
+
     var body: some View {
         List {
             Section(header: Text("Notifications")) {
-                ForEach(1..<6) { index in
-                    Text("Notification \(index)")
+                ForEach(notifications, id: \.self) { message in
+                    Text(message)
                 }
             }
         }
         .frame(height: 270)
         .scrollContentBackground(.hidden)
+        .onAppear {
+            fetchNotifications { fetchedNotifications, error in
+                if let fetchedNotifications = fetchedNotifications {
+                    self.notifications = fetchedNotifications
+                } else if let error = error {
+                    // Handle error
+                    print("Error fetching notifications: \(error.localizedDescription)")
+                }
+            }
+        }
     }
 }
 

@@ -8,12 +8,15 @@
 import Foundation
 import CocoaMQTT
 import UserNotifications
+import Firebase
 
 class MQTTManager: ObservableObject {
     private var mqtt: CocoaMQTT?
+    private let db = Firestore.firestore()
     
     @Published var isConnected: Bool = false
     @Published var message: String = ""
+    @Published var lastFiveMessages: [String] = []
     
     init() {
         mqtt = CocoaMQTT(clientID: "SwiftUIApp", host: "34.122.107.45", port: 1883)
@@ -42,6 +45,15 @@ class MQTTManager: ObservableObject {
     func publish(topic: String, message: String) {
         mqtt?.publish(topic, withString: message)
     }
+    
+    func addMessageToHistory(_ message: String) {
+        lastFiveMessages.append(message)
+        if lastFiveMessages.count > 5 {
+            lastFiveMessages.removeFirst()
+        }
+        
+        addNotification(lastFiveMessages: lastFiveMessages)
+    }
 }
 
 extension MQTTManager: CocoaMQTTDelegate {
@@ -60,9 +72,9 @@ extension MQTTManager: CocoaMQTTDelegate {
         
     }
     
-    func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message:
-        CocoaMQTTMessage, id: UInt16) {
+    func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16) {
         self.message = message.string ?? ""
+        addMessageToHistory(self.message)
         
         let content = UNMutableNotificationContent()
         content.title = message.topic
