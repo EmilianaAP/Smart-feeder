@@ -7,6 +7,8 @@
 #include <TimeLib.h>
 #include <TMCStepper.h>
 #include <SPI.h>
+#include <SharpIR.h>
+
 
 // Pin Definitions
 #define SW_RX       17 // TMC2208/TMC2224 SoftwareSerial receive pin
@@ -20,6 +22,10 @@
 #define STALL_VALUE       2     // [0..255]
 #define DRIVER_ADDRESS    0b00  // TMC2209 Driver address according to MS1 and MS2
 #define SERIAL_PORT       Serial2 // TMC2208/TMC2224 HardwareSerial port
+#define ir                34 // ir: the pin where your sensor is attached
+#define model             430 // model: an int that determines your sensor:  1080 for GP2Y0A21Y
+//                                            20150 for GP2Y0A02Y
+//                                            (working distance range according to the datasheets)
 
 // Function prototypes
 void callback(char* topic, byte* payload, unsigned int length);
@@ -34,6 +40,7 @@ void reconnect();
 void controlStepper();
 void handleMQTT();
 void setupInterrupt();
+int getDistance();
 
 // Objects and Variables
 RTC_DS3231 rtc;
@@ -44,6 +51,7 @@ WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "asia.pool.ntp.org", 7200, 60000);
 hw_timer_t *timer1 = NULL;
 TMC2209Stepper driver(&SERIAL_PORT, R_SENSE, DRIVER_ADDRESS);
+SharpIR SharpIR(ir, model);
 
 // Movement control variables
 unsigned long moveStartTime = 0;
@@ -119,13 +127,15 @@ void loop() {
   }
 
   if (startMotor) {
-    Serial.println("Starting motor movement...");
-    controlStepper(); // Debugging: Print when controlStepper() is called
-    
-    // Check if 10 seconds have elapsed since motor movement started
-    if (millis() - moveStartTime >= 10000) {
-      Serial.println("Motor movement completed.");
-      startMotor = false; // Reset the flag
+    if (getDistance() > 10){
+      Serial.println("Starting motor movement...");
+      controlStepper(); // Debugging: Print when controlStepper() is called
+      
+      // Check if 10 seconds have elapsed since motor movement started
+      if (millis() - moveStartTime >= 10000) {
+        Serial.println("Motor movement completed.");
+        startMotor = false; // Reset the flag
+      }
     }
   } else {
     Serial.println("Motor not moving");
@@ -143,7 +153,7 @@ void loop() {
     }
   }
 
-  delay(1000);
+  delay(2000);
 }
 
 // Function to set up pins
@@ -244,6 +254,18 @@ void controlStepper() {
   digitalWrite(EN_PIN, LOW); // Enable motor
   digitalWrite(DIR_PIN, LOW); // Set direction
   digitalWrite(STEP_PIN, HIGH); // Step
+}
+
+int getDistance() {
+  unsigned long pepe1=millis();  // takes the time before the loop on the library begins
+
+  int dis=SharpIR.distance();  // this returns the distance to the object you're measuring
+
+
+  Serial.print("Mean distance: ");  // returns it to the serial monitor
+  Serial.println(dis);
+  
+  return dis;
 }
 
 // Function to handle MQTT messages
