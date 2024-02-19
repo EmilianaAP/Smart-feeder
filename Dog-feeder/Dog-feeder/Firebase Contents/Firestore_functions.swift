@@ -87,17 +87,14 @@ func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?,
         } else if let document = document, document.exists {
             let data = document.data()
             
-            // Extract the "name" field from the fetched data
             if let name = data?["name"] as? String,
                let breed = data?["breed"] as? String,
                let age = data?["age"] as? Int,
                let sex = data?["sex"] as? String,
                let weight = data?["weight"] as? Float,
-               let location = data?["location"] as? String{
-                // Call the completion handler with the fetched data, name, and nil error
+               let location = data?["location"] as? String {
                 completion(data, name, breed, age, sex, weight, location, nil)
             } else {
-                // If the "name" field does not exist or its value cannot be cast to a String, handle the error or set a default value
                 print("Error: 'name' field not found or has invalid type.")
                 completion(nil, nil, nil, nil, nil, nil, nil, NSError(domain: "", code: -1, 
                                                                       userInfo: [NSLocalizedDescriptionKey: "Name field not found"]))
@@ -117,14 +114,24 @@ func deleteData() {
     }
     let uid = currentUser.uid
     let db = Firestore.firestore()
-    let docRef = db.collection("pets-info").document(uid)
+    var docRef = db.collection("pets-info").document(uid)
     
     docRef.delete() { err in
         if let err = err {
             print("Error removing document: \(err)")
         }
         else {
-            print("Document successfully removed!")
+            print("Document \(docRef) successfully removed!")
+        }
+    }
+    
+    docRef = db.collection("notifications").document(uid)
+    docRef.delete() { err in
+        if let err = err {
+            print("Error removing document: \(err)")
+        }
+        else {
+            print("Document \(docRef) successfully removed!")
         }
     }
 }

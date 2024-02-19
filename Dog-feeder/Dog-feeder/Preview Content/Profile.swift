@@ -17,6 +17,7 @@ struct Profile:View {
     @State private var location: String = ""
     @State private var showEdit: Bool = false
     @State private var showContent: Bool = false
+    @State private var showAlert = false
     
     func logoutUser() {
         guard let currentUser = Auth.auth().currentUser else {
@@ -47,7 +48,7 @@ struct Profile:View {
         
         deleteData()
         currentUser.delete { error in
-          if let error = error {
+            if error != nil {
             print("Error deleting profile")
           } else {
               print("User with UID \(uid) successfully deleted.")
@@ -121,7 +122,7 @@ struct Profile:View {
                     .bold()
                     
                     Button("Delete profile") {
-                        deleteProfile()
+                        showAlert = true
                     }
                     .padding([.leading, .trailing], 28)
                     .padding([.top, .bottom], 5)
@@ -130,6 +131,17 @@ struct Profile:View {
                     .cornerRadius(22)
                     .font(.system(size: 20))
                     .bold()
+                    .alert(isPresented: $showAlert) {
+                        Alert(
+                            title: Text("Are you sure?"),
+                            message: Text("This action cannot be undone."),
+                            primaryButton: .destructive(Text("Delete")) {
+                                deleteProfile()
+                            },
+                            secondaryButton: .cancel()
+                        )
+                    }
+                    
                 }
             }
             .navigationDestination(isPresented: $showEdit) {
