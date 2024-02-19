@@ -13,25 +13,23 @@ struct Main: View {
     @State private var showProfile = false
     
     var body: some View {
-        NavigationStack{
-            ZStack {
-                Color("Background").ignoresSafeArea(.all)
-                VStack {
-                    HStack{
-                        MQTT_connection(mqttManager: mqttManager)
-                        ProfileButton(showProfile: $showProfile)
-                    }
-                    Spacer()
-                    BatteryView(battery: 80)
-                    FoodWaterView(percentageFood: 60, percentageWater: 100)
-                    Spacer()
-                    NotificationListView()
+        ZStack {
+            Color("Background").ignoresSafeArea(.all)
+            VStack {
+                HStack{
+                    MQTT_connection(mqttManager: mqttManager)
+                    ProfileButton(showProfile: $showProfile)
                 }
+                Spacer()
+                BatteryView(battery: 80)
+                FoodWaterView(percentageFood: 60, percentageWater: 100)
+                Spacer()
+                NotificationListView()
             }
-            
-            .navigationDestination(isPresented: $showProfile) {
-                Profile()
-            }
+        }
+        
+        .navigationDestination(isPresented: $showProfile) {
+            Profile()
         }
     }
 }

@@ -1,47 +1,48 @@
 import SwiftUI
 
-struct test: View {
+import SwiftUI
+
+struct FirstView: View {
+    @State private var currentPage: Int? = nil
+    
     var body: some View {
-        NavigationView {
-            VStack {
-                NavigationLink(destination: MainPage()) {
-                    Text("Go to Main Page")
+        VStack {
+            if currentPage == nil {
+                Button("Go to Second Page") {
+                    currentPage = 1
                 }
+            } else if currentPage == 1 {
+                SecondView(currentPage: $currentPage)
+            } else if currentPage == 2 {
+                ThirdView(currentPage: $currentPage)
             }
-            .navigationTitle("Content View")
         }
     }
 }
 
-struct MainPage: View {
+struct SecondView: View {
+    @Binding var currentPage: Int?
+    
     var body: some View {
         VStack {
-            NavigationLink(destination: ProfileView()) {
-                Text("Go to Profile")
+            Text("Second Page")
+            Button("Go to Third Page") {
+                currentPage = 2
             }
         }
-        .navigationTitle("Main Page")
     }
 }
 
-struct ProfileView: View {
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-
+struct ThirdView: View {
+    @Binding var currentPage: Int?
+    
     var body: some View {
         VStack {
-            Text("Profile")
-            Button(action: {
-                // Navigate back to MainPage skipping ContentView
-                self.presentationMode.wrappedValue.dismiss()
-                self.presentationMode.wrappedValue.dismiss()
-            }) {
-                Text("Back to Main Page")
-            }
+            Text("Third Page")
         }
-        .navigationTitle("Profile")
     }
 }
 
 #Preview {
-    test()
+    FirstView()
 }

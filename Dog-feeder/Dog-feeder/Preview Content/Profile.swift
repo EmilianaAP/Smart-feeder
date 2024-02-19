@@ -58,122 +58,120 @@ struct Profile:View {
     }
     
     var body: some View {
-        NavigationStack{
-            ZStack{
-                Color("Background").ignoresSafeArea(.all)
-                VStack{
-                    Text(name + " (" + sex + ")")
-                        .bold()
-                        .font(.system(size: 36))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.leading, 10)
-                        .padding(.top, 50)
-                    
-                    Text("📍" + location)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding([.leading, .bottom], 10)
-                    
-                    HStack(spacing: 20) {
-                        Text("Age: \n" + String(age) + " years")
-                            .multilineTextAlignment(.center)
-                            .padding([.leading, .trailing], 20)
-                            .padding([.top, .bottom], 40)
-                            .background(Color("Buttons.Login-Register"))
-                            .foregroundColor(.white)
-                            .cornerRadius(22)
-                        
-                        Text("Bread: \n" + breed)
-                            .multilineTextAlignment(.center)
-                            .padding([.leading, .trailing], 20)
-                            .padding([.top, .bottom], 40)
-                            .background(Color("Buttons.Login-Register"))
-                            .foregroundColor(.white)
-                            .cornerRadius(22)
-                        
-                        Text("Weight: \n" + String(weight) + " kg")
-                            .multilineTextAlignment(.center)
-                            .padding([.leading, .trailing], 20)
-                            .padding([.top, .bottom], 40)
-                            .background(Color("Buttons.Login-Register"))
-                            .foregroundColor(.white)
-                            .cornerRadius(22)
-                    }
-                    
-                    Button("Edit profile") {
-                        showEdit = true
-                    }
-                    .padding([.leading, .trailing], 38)
-                    .padding([.top, .bottom], 5)
-                    .background(Color("Buttons.Login-Register"))
-                    .foregroundColor(.white)
-                    .cornerRadius(22)
-                    .padding(.top, 100)
-                    .font(.system(size: 20))
-                    
-                    Button("Log out") {
-                       logoutUser()
-                    }
-                    .padding([.leading, .trailing], 51)
-                    .padding([.top, .bottom], 5)
-                    .background(Color("Buttons.Login-Register"))
-                    .foregroundColor(.white)
-                    .cornerRadius(22)
-                    .font(.system(size: 20))
+        ZStack{
+            Color("Background").ignoresSafeArea(.all)
+            VStack{
+                Text(name + " (" + sex + ")")
                     .bold()
+                    .font(.system(size: 36))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 10)
+                    .padding(.top, 50)
+                
+                Text("📍" + location)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding([.leading, .bottom], 10)
+                
+                HStack(spacing: 20) {
+                    Text("Age: \n" + String(age) + " years")
+                        .multilineTextAlignment(.center)
+                        .padding([.leading, .trailing], 20)
+                        .padding([.top, .bottom], 40)
+                        .background(Color("Buttons.Login-Register"))
+                        .foregroundColor(.white)
+                        .cornerRadius(22)
                     
-                    Button("Delete profile") {
-                        showAlert = true
-                    }
-                    .padding([.leading, .trailing], 28)
-                    .padding([.top, .bottom], 5)
-                    .background(Color("Buttons.Login-Register"))
-                    .foregroundColor(.white)
-                    .cornerRadius(22)
-                    .font(.system(size: 20))
-                    .bold()
-                    .alert(isPresented: $showAlert) {
-                        Alert(
-                            title: Text("Are you sure?"),
-                            message: Text("This action cannot be undone."),
-                            primaryButton: .destructive(Text("Delete")) {
-                                deleteProfile()
-                            },
-                            secondaryButton: .cancel()
-                        )
-                    }
+                    Text("Bread: \n" + breed)
+                        .multilineTextAlignment(.center)
+                        .padding([.leading, .trailing], 20)
+                        .padding([.top, .bottom], 40)
+                        .background(Color("Buttons.Login-Register"))
+                        .foregroundColor(.white)
+                        .cornerRadius(22)
                     
+                    Text("Weight: \n" + String(weight) + " kg")
+                        .multilineTextAlignment(.center)
+                        .padding([.leading, .trailing], 20)
+                        .padding([.top, .bottom], 40)
+                        .background(Color("Buttons.Login-Register"))
+                        .foregroundColor(.white)
+                        .cornerRadius(22)
                 }
+                
+                Button("Edit profile") {
+                    showEdit = true
+                }
+                .padding([.leading, .trailing], 38)
+                .padding([.top, .bottom], 5)
+                .background(Color("Buttons.Login-Register"))
+                .foregroundColor(.white)
+                .cornerRadius(22)
+                .padding(.top, 100)
+                .font(.system(size: 20))
+                
+                Button("Log out") {
+                   logoutUser()
+                }
+                .padding([.leading, .trailing], 51)
+                .padding([.top, .bottom], 5)
+                .background(Color("Buttons.Login-Register"))
+                .foregroundColor(.white)
+                .cornerRadius(22)
+                .font(.system(size: 20))
+                .bold()
+                
+                Button("Delete profile") {
+                    showAlert = true
+                }
+                .padding([.leading, .trailing], 28)
+                .padding([.top, .bottom], 5)
+                .background(Color("Buttons.Login-Register"))
+                .foregroundColor(.white)
+                .cornerRadius(22)
+                .font(.system(size: 20))
+                .bold()
+                .alert(isPresented: $showAlert) {
+                    Alert(
+                        title: Text("Are you sure?"),
+                        message: Text("This action cannot be undone."),
+                        primaryButton: .destructive(Text("Delete")) {
+                            deleteProfile()
+                        },
+                        secondaryButton: .cancel()
+                    )
+                }
+                
             }
-            .navigationDestination(isPresented: $showEdit) {
-                Edit_profile()
-            }
-            .navigationDestination(isPresented: $showContent) {
-                ContentView()
-                    .navigationBarBackButtonHidden(true)
-            }
-            .onAppear{
-                fetchData { data, name, breed, age, sex, weight, location, error  in
-                    if let error = error {
-                        print("Error fetching data: \(error.localizedDescription)")
-                    } else {
-                        if let name = name {
-                            self.name = name
-                        }
-                        if let breed = breed {
-                            self.breed = breed
-                        }
-                        if let age = age {
-                            self.age = age
-                        }
-                        if let sex = sex {
-                            self.sex = sex
-                        }
-                        if let weight = weight {
-                            self.weight = weight
-                        }
-                        if location != nil {
-                            self.location = location!
-                        }
+        }
+        .navigationDestination(isPresented: $showEdit) {
+            Edit_profile()
+        }
+        .navigationDestination(isPresented: $showContent) {
+            ContentView()
+                .navigationBarBackButtonHidden(true)
+        }
+        .onAppear{
+            fetchData { data, name, breed, age, sex, weight, location, error  in
+                if let error = error {
+                    print("Error fetching data: \(error.localizedDescription)")
+                } else {
+                    if let name = name {
+                        self.name = name
+                    }
+                    if let breed = breed {
+                        self.breed = breed
+                    }
+                    if let age = age {
+                        self.age = age
+                    }
+                    if let sex = sex {
+                        self.sex = sex
+                    }
+                    if let weight = weight {
+                        self.weight = weight
+                    }
+                    if location != nil {
+                        self.location = location!
                     }
                 }
             }

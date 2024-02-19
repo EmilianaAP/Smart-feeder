@@ -12,26 +12,23 @@ struct ContentView: View {
     @State private var showRegister: Bool = false
     
     var body: some View {
-        NavigationView {
+        NavigationStack{
             ZStack {
                 Color("Background").ignoresSafeArea(.all)
                 
-                Image("Login-Register")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding(.bottom, 100)
-                
                 VStack {
                     Text("SnackBuddy")
-                        .bold()
                         .padding(.top, 170)
-                        .padding(.bottom, 20)
+                        .bold()
                         .font(.system(size: 56))
                     
-                    Spacer()
+                    Image("Login-Register")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.bottom, 30)
                     
-                    NavigationLink(destination: Login()) {
-                        Text("Login")
+                    Button("Login") {
+                        showLogin = true
                     }
                     .padding(.leading, 50)
                     .padding(.trailing, 50)
@@ -43,8 +40,8 @@ struct ContentView: View {
                     .padding(.bottom, 15)
                     .font(.system(size: 20))
                     
-                    NavigationLink(destination: Register()) {
-                        Text("Register")
+                    Button("Register") {
+                        showRegister = true
                     }
                     .padding(.leading, 38)
                     .padding(.trailing, 38)
@@ -57,6 +54,13 @@ struct ContentView: View {
                     .font(.system(size: 20))
                     
                     Spacer()
+                }
+                
+                .navigationDestination(isPresented: $showLogin) {
+                    Login()
+                }
+                .navigationDestination(isPresented: $showRegister) {
+                    Register()
                 }
             }
         }.tint(.black)

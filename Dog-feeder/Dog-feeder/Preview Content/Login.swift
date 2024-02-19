@@ -48,55 +48,53 @@ struct Login: View {
     }
     
     var body: some View {
-        NavigationStack {
-            ZStack{
-                Color("Background").ignoresSafeArea(.all)
-                VStack{
-                    Text("Login")
-                        .bold()
-                        .padding(.top, 120)
-                        .font(.system(size: 40))
+        ZStack{
+            Color("Background").ignoresSafeArea(.all)
+            VStack{
+                Text("Login")
+                    .bold()
+                    .padding(.top, 120)
+                    .font(.system(size: 40))
+                
+                Text(error_message)
+                    .opacity(login_error ? 1 : 0)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding([.leading, .top], 20)
+                    .foregroundStyle(.red)
+                
+                Button("Forgotten password?") {
+                    resetPassword()
+                }
+                .fixedSize()
+                .foregroundColor(.black)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 20)
+                
+                Form {
+                    Section(){
+                        TextField("Email", text: $email)
+                            .keyboardType(.emailAddress)
+                            .disableAutocorrection(true)
+                            .autocapitalization(.none)
+                        SecureField("Password", text: $password)
+                    }
                     
-                    Text(error_message)
-                        .opacity(login_error ? 1 : 0)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding([.leading, .top], 20)
-                        .foregroundStyle(.red)
                     
-                    Button("Forgotten password?") {
-                        resetPassword()
+                    Button("Login") {
+                        loginUser()
                     }
                     .fixedSize()
                     .foregroundColor(.black)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading, 20)
-                    
-                    Form {
-                        Section(){
-                            TextField("Email", text: $email)
-                                .keyboardType(.emailAddress)
-                                .disableAutocorrection(true)
-                                .autocapitalization(.none)
-                            SecureField("Password", text: $password)
-                        }
-                        
-                        
-                        Button("Login") {
-                            loginUser()
-                        }
-                        .fixedSize()
-                        .foregroundColor(.black)
-                        .frame(maxWidth: .infinity)
-                    }
-                    .scrollContentBackground(.hidden)
-                    .padding(.top, -10)
-                    
-                    .navigationDestination(
-                        isPresented: $authorization) {
-                            Main()
-                                .navigationBarBackButtonHidden(true)
-                        }
+                    .frame(maxWidth: .infinity)
                 }
+                .scrollContentBackground(.hidden)
+                .padding(.top, -10)
+                
+                .navigationDestination(
+                    isPresented: $authorization) {
+                        Main()
+                            .navigationBarBackButtonHidden(true)
+                    }
             }
         }
     }
