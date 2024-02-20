@@ -12,6 +12,7 @@ struct Profile:View {
     @State private var name: String = ""
     @State private var breed: String = ""
     @State private var age = 0
+    @State private var ageUnit: String = ""
     @State private var sex: String = ""
     @State private var weight: Float = 0.0
     @State private var location: String = ""
@@ -73,7 +74,7 @@ struct Profile:View {
                     .padding([.leading, .bottom], 10)
                 
                 HStack(spacing: 20) {
-                    Text("Age: \n" + String(age) + " years")
+                    Text("Age: \n" + String(age) + " " + ageUnit)
                         .multilineTextAlignment(.center)
                         .padding([.leading, .trailing], 20)
                         .padding([.top, .bottom], 40)
@@ -81,7 +82,7 @@ struct Profile:View {
                         .foregroundColor(.white)
                         .cornerRadius(22)
                     
-                    Text("Bread: \n" + breed)
+                    Text("Breed: \n" + breed)
                         .multilineTextAlignment(.center)
                         .padding([.leading, .trailing], 20)
                         .padding([.top, .bottom], 40)
@@ -151,7 +152,7 @@ struct Profile:View {
                 .navigationBarBackButtonHidden(true)
         }
         .onAppear{
-            fetchData { data, name, breed, age, sex, weight, location, error  in
+            fetchData { data, name, breed, age, ageUnit, sex, weight, location, error  in
                 if let error = error {
                     print("Error fetching data: \(error.localizedDescription)")
                 } else {
@@ -163,6 +164,9 @@ struct Profile:View {
                     }
                     if let age = age {
                         self.age = age
+                    }
+                    if let ageUnit = ageUnit {
+                        self.ageUnit = ageUnit
                     }
                     if let sex = sex {
                         self.sex = sex

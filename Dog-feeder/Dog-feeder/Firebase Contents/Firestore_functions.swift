@@ -8,7 +8,7 @@
 import FirebaseFirestore
 import FirebaseAuth
 
-func addData(name: String, breed: String, age: Int, sex: String, weight: Float, 
+func addData(name: String, breed: String, age: Int, ageUnit: String, sex: String, weight: Float,
              location: String, completion: @escaping (String) -> Void) {
     guard let user = Auth.auth().currentUser else {
         print("User not authenticated.")
@@ -18,13 +18,28 @@ func addData(name: String, breed: String, age: Int, sex: String, weight: Float,
     
     let uid = user.uid
     var petData = [String: Any]()
-
-    petData["name"] = name
-    petData["breed"] = breed
-    petData["age"] = age
-    petData["sex"] = sex
-    petData["weight"] = weight
-    petData["location"] = location
+    
+    if name != "" {
+        petData["name"] = name
+    }
+    if breed != "" {
+        petData["breed"] = breed
+    }
+    if age != 0 {
+        petData["age"] = age
+    }
+    if ageUnit != ""{
+        petData["ageUnit"] = ageUnit
+    }
+    if sex != "" {
+        petData["sex"] = sex
+    }
+    if weight != 0.0 {
+        petData["weight"] = weight
+    }
+    if location != "" {
+        petData["location"] = location
+    }
     
     createOrUpdateDocument(collection: "pets-info", documentID: uid, data: petData) { error in
         if let error = error {
@@ -53,12 +68,12 @@ func createOrUpdateDocument(collection: String, documentID: String,
 }
 
 
-func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?, 
+func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?, String?,
                                       String?, Float?, String?, Error?) -> Void) {
     guard let user = Auth.auth().currentUser else {
         print("User not authenticated.")
         let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "User not authenticated"])
-        completion(nil, nil, nil, nil, nil, nil, nil, error)
+        completion(nil, nil, nil, nil, nil, nil, nil, nil, error)
         return
     }
     
@@ -69,26 +84,27 @@ func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?,
     docRef.getDocument { document, error in
         if let error = error {
             print("Error fetching document: \(error.localizedDescription)")
-            completion(nil, nil, nil, nil, nil, nil, nil, error)
+            completion(nil, nil, nil, nil, nil, nil, nil, nil, error)
         } else if let document = document, document.exists {
             let data = document.data()
             
             if let name = data?["name"] as? String,
                let breed = data?["breed"] as? String,
                let age = data?["age"] as? Int,
+               let ageUnit = data?["ageUnit"] as? String,
                let sex = data?["sex"] as? String,
                let weight = data?["weight"] as? Float,
                let location = data?["location"] as? String {
-                completion(data, name, breed, age, sex, weight, location, nil)
+                completion(data, name, breed, age, ageUnit, sex, weight, location, nil)
             } else {
                 print("Error: 'name' field not found or has invalid type.")
-                completion(nil, nil, nil, nil, nil, nil, nil, NSError(domain: "", code: -1, 
+                completion(nil, nil, nil, nil, nil, nil, nil, nil, NSError(domain: "", code: -1,
                                                                       userInfo: [NSLocalizedDescriptionKey: "Name field not found"]))
             }
         } else {
             let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Document does not exist"])
             print("Document does not exist")
-            completion(nil, nil, nil, nil, nil, nil, nil, error)
+            completion(nil, nil, nil, nil, nil, nil, nil, nil, error)
         }
     }
 }
