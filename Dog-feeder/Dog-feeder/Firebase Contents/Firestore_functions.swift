@@ -18,28 +18,14 @@ func addData(name: String, breed: String, age: Int, sex: String, weight: Float,
     
     let uid = user.uid
     var petData = [String: Any]()
+
+    petData["name"] = name
+    petData["breed"] = breed
+    petData["age"] = age
+    petData["sex"] = sex
+    petData["weight"] = weight
+    petData["location"] = location
     
-    // Populate petData with non-empty fields
-    if name != "" {
-        petData["name"] = name
-    }
-    if breed != "" {
-        petData["breed"] = breed
-    }
-    if age != 0 {
-        petData["age"] = age
-    }
-    if sex != "" {
-        petData["sex"] = sex
-    }
-    if weight != 0.0 {
-        petData["weight"] = weight
-    }
-    if location != "" {
-        petData["location"] = location
-    }
-    
-    // Perform Firestore operation
     createOrUpdateDocument(collection: "pets-info", documentID: uid, data: petData) { error in
         if let error = error {
             completion("Error updating data: \(error.localizedDescription)")

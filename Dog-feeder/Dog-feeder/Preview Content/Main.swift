@@ -11,6 +11,7 @@ import FirebaseAuth
 struct Main: View {
     @StateObject private var mqttManager = MQTTManager()
     @State private var showProfile = false
+    @State private var showAddFood = false
     
     var body: some View {
         ZStack {
@@ -21,7 +22,7 @@ struct Main: View {
                     ProfileButton(showProfile: $showProfile)
                 }
                 Spacer()
-                BatteryView(battery: 80)
+                AddFoodView(showAddFood: $showAddFood)
                 FoodWaterView(percentageFood: 60, percentageWater: 100)
                 Spacer()
                 NotificationListView()
@@ -30,6 +31,9 @@ struct Main: View {
         
         .navigationDestination(isPresented: $showProfile) {
             Profile()
+        }
+        .navigationDestination(isPresented: $showAddFood) {
+            AddFood()
         }
     }
 }
@@ -87,12 +91,12 @@ struct ProfileButton: View {
     }
 }
 
-struct BatteryView: View {
-    var battery: Int
+struct AddFoodView: View {
+    @Binding var showAddFood: Bool
+    let first_color = Color(#colorLiteral(red: 0.54299438, green: 0.9728057981, blue: 0.4297943115, alpha: 1))
+    let second_color = Color(#colorLiteral(red: 0.399361372, green: 0.9747387767, blue: 0.2709077001, alpha: 1))
+    
     var body: some View {
-        let first_color = Color(#colorLiteral(red: 0.54299438, green: 0.9728057981, blue: 0.4297943115, alpha: 1))
-        let second_color = Color(#colorLiteral(red: 0.399361372, green: 0.9747387767, blue: 0.2709077001, alpha: 1))
-        var battery = 80
         ZStack{
             Circle()
                 .stroke(lineWidth: 20)
@@ -101,7 +105,6 @@ struct BatteryView: View {
                 .frame(width: 160, height: 160)
             
             Circle()
-                .trim(from: 0.0, to: min(CGFloat(battery)/100, 1.0))
                 .stroke(
                     style: StrokeStyle(lineWidth: 15.0,
                             lineCap: .round,
@@ -113,9 +116,13 @@ struct BatteryView: View {
                 .frame(width: 160, height: 160)
                 
             
-            Text(String(battery) + "%")
-                .bold()
-                .font(.system(size: 40))
+            Button("schedule" + "\n" + "next meal"){
+                showAddFood = true
+            }
+            .bold()
+            .foregroundColor(.black)
+            .multilineTextAlignment(.center)
+            .font(.system(size: 25))
         }
         .padding(.bottom, 30)
         .padding(.top, 20)

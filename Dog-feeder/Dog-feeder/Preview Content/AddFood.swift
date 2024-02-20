@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Add_food: View {
+struct AddFood: View {
     @ObservedObject var mqttManager = MQTTManager()
     @State private var picked_time = Date()
     
@@ -32,9 +32,9 @@ struct Add_food: View {
                     }
                 }
                 
-                Text("Select time for your pet's next meal")
+                Text("Schedule your pet's next meal")
                     .bold()
-                    .padding(.bottom, 40)
+                    .padding(.bottom, 30)
                     .font(.system(size: 20))
                 
                 DatePicker("Please enter a date", selection: $picked_time, displayedComponents: .hourAndMinute)
@@ -63,5 +63,5 @@ struct Add_food: View {
 }
 
 #Preview {
-    Add_food()
+    AddFood()
 }

@@ -22,12 +22,11 @@
 		009EA5B12B74E2DC002194FA /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 009EA5B02B74E2DC002194FA /* FirebaseFirestore */; };
 		009EA5B32B74E2E8002194FA /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 009EA5B22B74E2E8002194FA /* FirebaseFirestoreSwift */; };
 		009EA5B82B74EECB002194FA /* Firestore_functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009EA5B72B74EECB002194FA /* Firestore_functions.swift */; };
-		009EA5BC2B798FF4002194FA /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009EA5BB2B798FF4002194FA /* test.swift */; };
 		00CD65442B0670B0004B8EA4 /* Dog_feederApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CD65432B0670B0004B8EA4 /* Dog_feederApp.swift */; };
 		00CD65462B0670B0004B8EA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00CD65452B0670B0004B8EA4 /* ContentView.swift */; };
 		00CD65482B0670B1004B8EA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00CD65472B0670B1004B8EA4 /* Assets.xcassets */; };
 		00CD654B2B0670B1004B8EA4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00CD654A2B0670B1004B8EA4 /* Preview Assets.xcassets */; };
-		00F519F02B7C3356003C06CA /* Add_food.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F519EF2B7C3356003C06CA /* Add_food.swift */; };
+		00F519F02B7C3356003C06CA /* AddFood.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F519EF2B7C3356003C06CA /* AddFood.swift */; };
 		00F519F32B7D7376003C06CA /* MQTT_functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F519F22B7D7376003C06CA /* MQTT_functions.swift */; };
 		DFD96EA8DB741E05D18F0A73 /* Pods_Dog_feeder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E85D6DED15AEC9B9C8F76B5 /* Pods_Dog_feeder.framework */; };
 /* End PBXBuildFile section */
@@ -40,13 +39,12 @@
 		007858352B50476A007C0C22 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		009EA5AE2B74BF32002194FA /* Edit_profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Edit_profile.swift; sourceTree = "<group>"; };
 		009EA5B72B74EECB002194FA /* Firestore_functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firestore_functions.swift; sourceTree = "<group>"; };
-		009EA5BB2B798FF4002194FA /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test.swift; sourceTree = "<group>"; };
 		00CD65402B0670B0004B8EA4 /* Dog-feeder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dog-feeder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		00CD65432B0670B0004B8EA4 /* Dog_feederApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dog_feederApp.swift; sourceTree = "<group>"; };
 		00CD65452B0670B0004B8EA4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; usesTabs = 0; };
 		00CD65472B0670B1004B8EA4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		00CD654A2B0670B1004B8EA4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		00F519EF2B7C3356003C06CA /* Add_food.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Add_food.swift; sourceTree = "<group>"; };
+		00F519EF2B7C3356003C06CA /* AddFood.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFood.swift; sourceTree = "<group>"; };
 		00F519F22B7D7376003C06CA /* MQTT_functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MQTT_functions.swift; sourceTree = "<group>"; };
 		8E85D6DED15AEC9B9C8F76B5 /* Pods_Dog_feeder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dog_feeder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC35234E5029DC99FAAB3A89 /* Pods-Dog-feeder.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dog-feeder.release.xcconfig"; path = "Target Support Files/Pods-Dog-feeder/Pods-Dog-feeder.release.xcconfig"; sourceTree = "<group>"; };
@@ -122,8 +120,7 @@
 				007858332B50474C007C0C22 /* Register.swift */,
 				007858352B50476A007C0C22 /* Login.swift */,
 				009EA5AE2B74BF32002194FA /* Edit_profile.swift */,
-				009EA5BB2B798FF4002194FA /* test.swift */,
-				00F519EF2B7C3356003C06CA /* Add_food.swift */,
+				00F519EF2B7C3356003C06CA /* AddFood.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -284,10 +281,9 @@
 				00CD65462B0670B0004B8EA4 /* ContentView.swift in Sources */,
 				007858302B5046BB007C0C22 /* Profile.swift in Sources */,
 				007858322B5046F3007C0C22 /* Main.swift in Sources */,
-				00F519F02B7C3356003C06CA /* Add_food.swift in Sources */,
+				00F519F02B7C3356003C06CA /* AddFood.swift in Sources */,
 				00F519F32B7D7376003C06CA /* MQTT_functions.swift in Sources */,
 				009EA5AF2B74BF32002194FA /* Edit_profile.swift in Sources */,
-				009EA5BC2B798FF4002194FA /* test.swift in Sources */,
 				009EA5B82B74EECB002194FA /* Firestore_functions.swift in Sources */,
 				007858362B50476A007C0C22 /* Login.swift in Sources */,
 				00CD65442B0670B0004B8EA4 /* Dog_feederApp.swift in Sources */,

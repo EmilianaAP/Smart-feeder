@@ -8,15 +8,14 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
+
 struct Register: View {
     @State private var showLogin = false
-    @State private var first_name: String = ""
-    @State private var last_name: String = ""
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var password_confirm: String = ""
     @State private var register_error: Bool = false
-     @State private var error_message: String = ""
+    @State private var error_message: String = ""
 
      private func createUser() {
          Auth.auth().createUser(withEmail: email, password: password, completion: { result, err in
