@@ -8,7 +8,7 @@
 import FirebaseFirestore
 import FirebaseAuth
 
-func addData(name: String, breed: String, age: Int, ageUnit: String, sex: String, weight: Float,
+func addData(name: String, breed: String, age: Int, ageUnit: String, sex: String, weight: Float, weightUnit: String,
              location: String, completion: @escaping (String) -> Void) {
     guard let user = Auth.auth().currentUser else {
         print("User not authenticated.")
@@ -37,13 +37,16 @@ func addData(name: String, breed: String, age: Int, ageUnit: String, sex: String
     if weight != 0.0 {
         petData["weight"] = weight
     }
+    if weightUnit != ""{
+        petData["weightUnit"] = weightUnit
+    }
     if location != "" {
         petData["location"] = location
     }
     
     createOrUpdateDocument(collection: "pets-info", documentID: uid, data: petData) { error in
         if let error = error {
-            completion("Error updating data: \(error.localizedDescription)")
+            
         } else {
             completion("Data updated successfully!")
         }
@@ -58,7 +61,6 @@ func createOrUpdateDocument(collection: String, documentID: String,
 
     docRef.setData(data, merge: true) { error in
         if let error = error {
-            print("Error writing document: \(error)")
             completion(error)
         } else {
                 print("Document successfully written!")
@@ -69,11 +71,10 @@ func createOrUpdateDocument(collection: String, documentID: String,
 
 
 func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?, String?,
-                                      String?, Float?, String?, Error?) -> Void) {
+                                      String?, Float?, String?, String?, Error?) -> Void) {
     guard let user = Auth.auth().currentUser else {
-        print("User not authenticated.")
         let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "User not authenticated"])
-        completion(nil, nil, nil, nil, nil, nil, nil, nil, error)
+        completion(nil, nil, nil, nil, nil, nil, nil, nil, nil, error)
         return
     }
     
@@ -84,7 +85,7 @@ func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?, St
     docRef.getDocument { document, error in
         if let error = error {
             print("Error fetching document: \(error.localizedDescription)")
-            completion(nil, nil, nil, nil, nil, nil, nil, nil, error)
+            completion(nil, nil, nil, nil, nil, nil, nil, nil, nil, error)
         } else if let document = document, document.exists {
             let data = document.data()
             
@@ -94,17 +95,18 @@ func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?, St
                let ageUnit = data?["ageUnit"] as? String,
                let sex = data?["sex"] as? String,
                let weight = data?["weight"] as? Float,
+               let weightUnit = data?["weightUnit"] as? String,
                let location = data?["location"] as? String {
-                completion(data, name, breed, age, ageUnit, sex, weight, location, nil)
+                completion(data, name, breed, age, ageUnit, sex, weight, weightUnit, location, nil)
             } else {
                 print("Error: 'name' field not found or has invalid type.")
-                completion(nil, nil, nil, nil, nil, nil, nil, nil, NSError(domain: "", code: -1,
+                completion(nil, nil, nil, nil, nil, nil, nil, nil, nil, NSError(domain: "", code: -1,
                                                                       userInfo: [NSLocalizedDescriptionKey: "Name field not found"]))
             }
         } else {
             let error = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Document does not exist"])
             print("Document does not exist")
-            completion(nil, nil, nil, nil, nil, nil, nil, nil, error)
+            completion(nil, nil, nil, nil, nil, nil, nil, nil, nil, error)
         }
     }
 }
@@ -148,7 +150,6 @@ func addNotification(lastFiveMessages: [String] = []) {
     let db = Firestore.firestore()
     let notificationsRef = db.collection("notifications").document(uid)
 
-    // Fetch existing notifications
     notificationsRef.getDocument { document, error in
         if let error = error {
             print("Error fetching existing notifications: \(error.localizedDescription)")
@@ -157,10 +158,8 @@ func addNotification(lastFiveMessages: [String] = []) {
 
         var existingMessages = document?.data()?["messages"] as? [String] ?? []
 
-        // Append new messages to existing ones
         existingMessages.append(contentsOf: lastFiveMessages)
 
-        // Update the document with the expanded array
         notificationsRef.setData(["messages": existingMessages]) { error in
             if let error = error {
                 print("Error updating notifications: \(error.localizedDescription)")

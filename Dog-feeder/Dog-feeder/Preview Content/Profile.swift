@@ -15,10 +15,13 @@ struct Profile:View {
     @State private var ageUnit: String = ""
     @State private var sex: String = ""
     @State private var weight: Float = 0.0
+    @State private var weightUnit: String = ""
     @State private var location: String = ""
     @State private var showEdit: Bool = false
     @State private var showContent: Bool = false
     @State private var showAlert = false
+    @State private var fetch_message: String = ""
+    @State private var fetch_result: Bool = false
     
     func logoutUser() {
         guard let currentUser = Auth.auth().currentUser else {
@@ -61,26 +64,36 @@ struct Profile:View {
     var body: some View {
         ZStack{
             Color("Background").ignoresSafeArea(.all)
+            Text(fetch_message)
+                .opacity(fetch_result ? 1 : 0)
+                .padding(.bottom, 65)
+                .padding([.leading, .trailing], 15)
+                .foregroundStyle(.red)
+                .multilineTextAlignment(.center)
+                .font(.system(size: 25))
             VStack{
                 Text(name + " (" + sex + ")")
+                    .opacity(fetch_result ? 0 : 1)
                     .bold()
                     .font(.system(size: 36))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 10)
-                    .padding(.top, 50)
                 
                 Text("📍" + location)
+                    .opacity(fetch_result ? 0 : 1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding([.leading, .bottom], 10)
                 
                 HStack(spacing: 20) {
                     Text("Age: \n" + String(age) + " " + ageUnit)
+                        .opacity(fetch_result ? 0 : 1)
                         .multilineTextAlignment(.center)
                         .padding([.leading, .trailing], 20)
                         .padding([.top, .bottom], 40)
                         .background(Color("Buttons.Login-Register"))
                         .foregroundColor(.white)
                         .cornerRadius(22)
+                        .opacity(fetch_result ? 0 : 1)
                     
                     Text("Breed: \n" + breed)
                         .multilineTextAlignment(.center)
@@ -89,14 +102,16 @@ struct Profile:View {
                         .background(Color("Buttons.Login-Register"))
                         .foregroundColor(.white)
                         .cornerRadius(22)
+                        .opacity(fetch_result ? 0 : 1)
                     
-                    Text("Weight: \n" + String(weight) + " kg")
+                    Text("Weight: \n" + String(weight) + " " + weightUnit)
                         .multilineTextAlignment(.center)
                         .padding([.leading, .trailing], 20)
                         .padding([.top, .bottom], 40)
                         .background(Color("Buttons.Login-Register"))
                         .foregroundColor(.white)
                         .cornerRadius(22)
+                        .opacity(fetch_result ? 0 : 1)
                 }
                 
                 Button("Edit profile") {
@@ -152,9 +167,10 @@ struct Profile:View {
                 .navigationBarBackButtonHidden(true)
         }
         .onAppear{
-            fetchData { data, name, breed, age, ageUnit, sex, weight, location, error  in
+            fetchData { data, name, breed, age, ageUnit, sex, weight, weightUnit, location, error  in
                 if let error = error {
-                    print("Error fetching data: \(error.localizedDescription)")
+                    fetch_message = "Oops! Pet Profile Missing :(" + "\n" + "Please go to the 'Edit profile' section to add the information."
+                    fetch_result = true
                 } else {
                     if let name = name {
                         self.name = name
@@ -173,6 +189,9 @@ struct Profile:View {
                     }
                     if let weight = weight {
                         self.weight = weight
+                    }
+                    if let weightUnit = weightUnit {
+                        self.weightUnit = weightUnit
                     }
                     if location != nil {
                         self.location = location!
