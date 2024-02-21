@@ -8,8 +8,8 @@
 import FirebaseFirestore
 import FirebaseAuth
 
-func addData(name: String, breed: String, age: Int, ageUnit: String, sex: String, weight: Float, weightUnit: String,
-             location: String, completion: @escaping (String) -> Void) {
+func addData(name: String, breed: String, age: String, ageUnit: String, sex: String, weight: String, weightUnit: String,
+             location: String, existing_profile: Bool, completion: @escaping (String) -> Void) {
     guard let user = Auth.auth().currentUser else {
         print("User not authenticated.")
         completion("User not authenticated.")
@@ -25,8 +25,8 @@ func addData(name: String, breed: String, age: Int, ageUnit: String, sex: String
     if breed != "" {
         petData["breed"] = breed
     }
-    if age != 0 {
-        petData["age"] = age
+    if age != "" && Int(age) != 0 {
+        petData["age"] = Int(age)
     }
     if ageUnit != ""{
         petData["ageUnit"] = ageUnit
@@ -34,8 +34,8 @@ func addData(name: String, breed: String, age: Int, ageUnit: String, sex: String
     if sex != "" {
         petData["sex"] = sex
     }
-    if weight != 0.0 {
-        petData["weight"] = weight
+    if weight != "" && Float(weight) != 0 {
+        petData["weight"] = Float(weight)
     }
     if weightUnit != ""{
         petData["weightUnit"] = weightUnit

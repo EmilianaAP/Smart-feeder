@@ -12,37 +12,24 @@ import FirebaseAuth
 
 struct Edit_profile: View {
     @State private var name: String = ""
-    @State private var nameField: String = "Name"
-    
     @State private var breed: String = ""
-    @State private var breedField: String = "Breed"
-
-    
     @State private var age: String = ""
-    private var ageUnitArray = ["years", "months"]
+    private var ageUnitArray = ["year(s)", "month(s)"]
     @State private var selectedIndexAgeUnit = 0
     @State private var ageUnit: String = ""
-    @State private var ageField: String = "Age"
-
-    
     @State private var sex: String = ""
     private var genderArray = ["Male", "Female"]
     @State private var selectedIndexGender = 0
-    
     @State private var weight: String = ""
-    private var weightUnitArray = ["kg", "lbs"]
+    private var weightUnitArray = ["kg", "lb"]
     @State private var selectedIndexWeightUnit = 0
     @State private var weightUnit: String = ""
-    @State private var weightField: String = "Weight"
-    
     @State private var location: String = ""
-    @State private var locationField: String = "Location"
-
     @State private var textField: String = "Edit your pet's info"
-    
     @State private var submit_message: String = ""
     @State private var submit_result: Bool = false
     @State private var existing_profile: Bool = true
+    @State private var add_data: Bool = false
 
     var body: some View {
         ZStack{
@@ -63,7 +50,7 @@ struct Edit_profile: View {
                 
                 Form {
                     Section(){
-                        TextField(nameField, text: $name)
+                        TextField("Name", text: $name)
                             .disableAutocorrection(true)
                         TextField("Breed", text: $breed)
                         HStack{
@@ -108,9 +95,40 @@ struct Edit_profile: View {
                         sex = genderArray[selectedIndexGender]
                         weightUnit = weightUnitArray[selectedIndexWeightUnit]
                         
-                        addData(name: name, breed: breed, age: Int(age) ?? 0, ageUnit: ageUnit, sex: sex, weight: Float(weight) ?? 0.0, weightUnit: weightUnit, location: location) { message in
-                            submit_message = message
+                        if(!existing_profile){
+                            if(name == "" || breed == "" || age == "" || sex == "" || weight == "" || location == ""){
+                                submit_message = "All fields are mandatory"
+                                add_data = false
+                            }
                         }
+                        
+                        if(Int(age) == 0){
+                            submit_message = "Age cannot be equal to 0, if your pets is bellow 1 year, use months"
+                            add_data = false
+                        }
+                        
+                        if(Int(age) ?? 0 > 1024){
+                            submit_message = "Age cannot be bigger than 1024"
+                            add_data = false
+                        }
+                        
+                        if(Float(weight) == 0){
+                            submit_message = "Weight cannot be equal to 0"
+                            add_data = false
+                        }
+                        
+                        if(Float(weight) ?? 0 > 1024){
+                            submit_message = "Weight cannot be bigger than 1024"
+                            add_data = false
+                        }
+                        
+                        if(add_data){
+                            addData(name: name, breed: breed, age: age, ageUnit: ageUnit, sex: sex, weight: weight, weightUnit: weightUnit, location: location, existing_profile: existing_profile) { message in
+                                submit_message = message
+                            }
+                        }
+                        
+                        add_data = true
                         submit_result = true
                     }
 
@@ -137,14 +155,6 @@ struct Edit_profile: View {
                     self.weightUnit = weightUnit ?? ""
                     self.location = location ?? ""
                 }
-            }
-            
-            if(existing_profile){
-                nameField = name
-                breedField = breed
-                ageField = age
-                weightField = weight
-                locationField = location
             }
         }
     }
