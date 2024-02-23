@@ -120,7 +120,7 @@ struct AddFoodView: View {
                 showAddFood = true
             }
             .bold()
-            .foregroundColor(.black)
+            .foregroundColor(Color("Text"))
             .multilineTextAlignment(.center)
             .font(.system(size: 25))
         }

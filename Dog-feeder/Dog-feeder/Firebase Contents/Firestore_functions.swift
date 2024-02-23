@@ -111,12 +111,7 @@ func fetchData(completion: @escaping ([String: Any]?, String?, String?, Int?, St
     }
 }
 
-func deleteData() {
-    guard let currentUser = Auth.auth().currentUser else {
-        print("No user is currently signed in.")
-        return
-    }
-    let uid = currentUser.uid
+func deleteData(uid: String) {
     let db = Firestore.firestore()
     var docRef = db.collection("pets-info").document(uid)
     

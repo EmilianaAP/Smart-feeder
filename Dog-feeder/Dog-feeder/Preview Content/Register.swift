@@ -68,7 +68,7 @@ struct Register: View {
                              showLogin = false
                          }
                          .fixedSize()
-                         .foregroundColor(.black)
+                         .foregroundColor(Color("Text"))
                          .frame(maxWidth: .infinity)
                      }
                      .scrollContentBackground(.hidden)

@@ -58,7 +58,7 @@ struct Edit_profile: View {
                                 .keyboardType(.numberPad)
                             
                             Picker(selection: $selectedIndexAgeUnit, label: Text("Select Age Unit")) {
-                                ForEach(0 ..< ageUnitArray.count) {
+                                ForEach(0 ..< 2) {
                                     Text(self.ageUnitArray[$0])
                                 }
                             }.pickerStyle(SegmentedPickerStyle())
@@ -102,8 +102,8 @@ struct Edit_profile: View {
                             }
                         }
                         
-                        if(Int(age) == 0){
-                            submit_message = "Age cannot be equal to 0, if your pets is bellow 1 year, use months"
+                        if(Int(age) ?? 0 <= 0){
+                            submit_message = "Age cannot be less than or equal to 0, if your pets is bellow 1 year, use months"
                             add_data = false
                         }
                         
@@ -112,8 +112,8 @@ struct Edit_profile: View {
                             add_data = false
                         }
                         
-                        if(Float(weight) == 0){
-                            submit_message = "Weight cannot be equal to 0"
+                        if(Float(weight) ?? 0 <= 0){
+                            submit_message = "Weight cannot be less than or equal to 0"
                             add_data = false
                         }
                         
@@ -133,7 +133,7 @@ struct Edit_profile: View {
                     }
 
                     .fixedSize()
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("Text"))
                     .frame(maxWidth: .infinity)
                 }
                 .scrollContentBackground(.hidden)

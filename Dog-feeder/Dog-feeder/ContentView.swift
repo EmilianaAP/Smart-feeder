@@ -63,7 +63,7 @@ struct ContentView: View {
                     Register()
                 }
             }
-        }.tint(.black)
+        }.tint(Color("Text"))
     }
 }
 

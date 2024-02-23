@@ -21,7 +21,7 @@ struct Profile:View {
     @State private var showContent: Bool = false
     @State private var showAlert = false
     @State private var fetch_message: String = ""
-    @State private var fetch_result: Bool = false
+    @State private var еxisting_profile: Bool = true
     
     func logoutUser() {
         guard let currentUser = Auth.auth().currentUser else {
@@ -50,7 +50,7 @@ struct Profile:View {
         }
         let uid = currentUser.uid
         
-        deleteData()
+        deleteData(uid: uid)
         currentUser.delete { error in
             if error != nil {
             print("Error deleting profile")
@@ -65,7 +65,7 @@ struct Profile:View {
         ZStack{
             Color("Background").ignoresSafeArea(.all)
             Text(fetch_message)
-                .opacity(fetch_result ? 1 : 0)
+                .opacity(еxisting_profile ? 0 : 1)
                 .padding(.bottom, 65)
                 .padding([.leading, .trailing], 15)
                 .foregroundStyle(.red)
@@ -73,27 +73,27 @@ struct Profile:View {
                 .font(.system(size: 25))
             VStack{
                 Text(name + " (" + sex + ")")
-                    .opacity(fetch_result ? 0 : 1)
+                    .opacity(еxisting_profile ? 1 : 0)
                     .bold()
                     .font(.system(size: 36))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 10)
                 
                 Text("📍" + location)
-                    .opacity(fetch_result ? 0 : 1)
+                    .opacity(еxisting_profile ? 1 : 0)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding([.leading, .bottom], 10)
                 
                 HStack(spacing: 20) {
                     Text("Age: \n" + String(age) + " " + ageUnit)
-                        .opacity(fetch_result ? 0 : 1)
+                        .opacity(еxisting_profile ? 1 : 0)
                         .multilineTextAlignment(.center)
                         .padding([.leading, .trailing], 20)
                         .padding([.top, .bottom], 40)
                         .background(Color("Buttons.Login-Register"))
                         .foregroundColor(.white)
                         .cornerRadius(22)
-                        .opacity(fetch_result ? 0 : 1)
+                        .opacity(еxisting_profile ? 1 : 0)
                     
                     Text("Breed: \n" + breed)
                         .multilineTextAlignment(.center)
@@ -102,7 +102,7 @@ struct Profile:View {
                         .background(Color("Buttons.Login-Register"))
                         .foregroundColor(.white)
                         .cornerRadius(22)
-                        .opacity(fetch_result ? 0 : 1)
+                        .opacity(еxisting_profile ? 1 : 0)
                     
                     Text("Weight: \n" + String(weight) + " " + weightUnit)
                         .multilineTextAlignment(.center)
@@ -111,7 +111,7 @@ struct Profile:View {
                         .background(Color("Buttons.Login-Register"))
                         .foregroundColor(.white)
                         .cornerRadius(22)
-                        .opacity(fetch_result ? 0 : 1)
+                        .opacity(еxisting_profile ? 1 : 0)
                 }
                 
                 Button("Edit profile") {
@@ -170,32 +170,16 @@ struct Profile:View {
             fetchData { data, name, breed, age, ageUnit, sex, weight, weightUnit, location, error  in
                 if let error = error {
                     fetch_message = "Oops! Pet Profile Missing :(" + "\n" + "Please go to the 'Edit profile' section to add the information."
-                    fetch_result = true
+                    еxisting_profile = false
                 } else {
-                    if let name = name {
-                        self.name = name
-                    }
-                    if let breed = breed {
-                        self.breed = breed
-                    }
-                    if let age = age {
-                        self.age = age
-                    }
-                    if let ageUnit = ageUnit {
-                        self.ageUnit = ageUnit
-                    }
-                    if let sex = sex {
-                        self.sex = sex
-                    }
-                    if let weight = weight {
-                        self.weight = weight
-                    }
-                    if let weightUnit = weightUnit {
-                        self.weightUnit = weightUnit
-                    }
-                    if location != nil {
-                        self.location = location!
-                    }
+                    if let name = name {self.name = name}
+                    if let breed = breed {self.breed = breed}
+                    if let age = age {self.age = age}
+                    if let ageUnit = ageUnit {self.ageUnit = ageUnit}
+                    if let sex = sex {self.sex = sex}
+                    if let weight = weight {self.weight = weight}
+                    if let weightUnit = weightUnit {self.weightUnit = weightUnit}
+                    if let location = location {self.location = location}
                 }
             }
         }

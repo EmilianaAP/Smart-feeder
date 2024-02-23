@@ -66,7 +66,7 @@ struct Login: View {
                     resetPassword()
                 }
                 .fixedSize()
-                .foregroundColor(.black)
+                .foregroundColor(Color("Text"))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading, 20)
                 
@@ -84,7 +84,7 @@ struct Login: View {
                         loginUser()
                     }
                     .fixedSize()
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("Text"))
                     .frame(maxWidth: .infinity)
                 }
                 .scrollContentBackground(.hidden)
