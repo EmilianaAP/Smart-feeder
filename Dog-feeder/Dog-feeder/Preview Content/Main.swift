@@ -23,7 +23,7 @@ struct Main: View {
                 }
                 Spacer()
                 AddFoodView(showAddFood: $showAddFood)
-                FoodWaterView(percentageFood: 60, percentageWater: 100)
+                FoodView(percentageFood: 60)
                 Spacer()
                 NotificationListView()
             }
@@ -33,7 +33,7 @@ struct Main: View {
             Profile()
         }
         .navigationDestination(isPresented: $showAddFood) {
-            AddFood()
+            AddFood(mqttManager: mqttManager)
         }
     }
 }
@@ -92,6 +92,7 @@ struct ProfileButton: View {
 }
 
 struct AddFoodView: View {
+    @ObservedObject var mqttManager = MQTTManager()
     @Binding var showAddFood: Bool
     let first_color = Color(#colorLiteral(red: 0.54299438, green: 0.9728057981, blue: 0.4297943115, alpha: 1))
     let second_color = Color(#colorLiteral(red: 0.399361372, green: 0.9747387767, blue: 0.2709077001, alpha: 1))
@@ -105,14 +106,10 @@ struct AddFoodView: View {
                 .frame(width: 160, height: 160)
             
             Circle()
-                .stroke(
-                    style: StrokeStyle(lineWidth: 15.0,
-                            lineCap: .round,
-                            lineJoin: .round))
+                .stroke(lineWidth: 15)
                 .foregroundStyle(LinearGradient(gradient: Gradient (colors: [Color(first_color), Color(second_color)]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing))
-                .rotationEffect((Angle(degrees: 270)))
                 .frame(width: 160, height: 160)
                 
             
@@ -129,20 +126,17 @@ struct AddFoodView: View {
     }
 }
 
-struct FoodWaterView: View {
+struct FoodView: View {
     var percentageFood: CGFloat
-    var percentageWater: CGFloat
     var firstFoodColor = Color(#colorLiteral(red: 0.6998714805, green: 0.5057218075, blue: 0.358222723, alpha: 1))
     var secondFoodColor = Color(#colorLiteral(red: 0.4907110929, green: 0.3262205422, blue: 0.2176229954, alpha: 1))
     var firstWaterColor = Color(#colorLiteral(red: 0.813916862, green: 0.9451536536, blue: 0.9344380498, alpha: 1))
     var secondWaterColor = Color(#colorLiteral(red: 0.6889745593, green: 0.9041253924, blue: 0.8708049655, alpha: 1))
     
     var body: some View {
-        VStack(spacing: 15) {
+        VStack() {
             LevelView(imageName: "Food-bowl", percentage: percentageFood, firstColor: firstFoodColor, secondColor: secondFoodColor)
-            LevelView(imageName: "Water-bowl", percentage: percentageWater, firstColor: firstWaterColor, secondColor: secondWaterColor)
         }
-        .padding(.bottom, 15)
     }
 }
 
@@ -188,8 +182,8 @@ struct NotificationListView: View {
     var body: some View {
         List {
             Section(header: Text("Notifications")) {
-                ForEach(notifications, id: \.self) { message in
-                    Text(message)
+                ForEach(notifications.reversed().prefix(5), id: \.self) { notification in
+                    Text(notification)
                 }
             }
         }
@@ -199,9 +193,6 @@ struct NotificationListView: View {
             fetchNotifications { fetchedNotifications, error in
                 if let fetchedNotifications = fetchedNotifications {
                     self.notifications = fetchedNotifications
-                } else if let error = error {
-                    // Handle error
-                    print("Error fetching notifications: \(error.localizedDescription)")
                 }
             }
         }

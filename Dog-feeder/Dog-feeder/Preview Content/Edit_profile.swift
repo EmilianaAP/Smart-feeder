@@ -95,11 +95,9 @@ struct Edit_profile: View {
                         sex = genderArray[selectedIndexGender]
                         weightUnit = weightUnitArray[selectedIndexWeightUnit]
                         
-                        if(!existing_profile){
-                            if(name == "" || breed == "" || age == "" || sex == "" || weight == "" || location == ""){
-                                submit_message = "All fields are mandatory"
-                                add_data = false
-                            }
+                        if(name == "" || breed == "" || age == "" || sex == "" || weight == "" || location == ""){
+                            submit_message = "All fields are mandatory"
+                            add_data = false
                         }
                         
                         if(Int(age) ?? 0 <= 0){
@@ -107,8 +105,8 @@ struct Edit_profile: View {
                             add_data = false
                         }
                         
-                        if(Int(age) ?? 0 > 1024){
-                            submit_message = "Age cannot be bigger than 1024"
+                        if(Int(age) ?? 0 > 100){
+                            submit_message = "Age cannot be bigger than 100"
                             add_data = false
                         }
                         
@@ -117,8 +115,8 @@ struct Edit_profile: View {
                             add_data = false
                         }
                         
-                        if(Float(weight) ?? 0 > 1024){
-                            submit_message = "Weight cannot be bigger than 1024"
+                        if(Float(weight) ?? 0 > 350){
+                            submit_message = "Weight cannot be bigger than 350"
                             add_data = false
                         }
                         

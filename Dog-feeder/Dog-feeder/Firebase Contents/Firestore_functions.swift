@@ -19,35 +19,17 @@ func addData(name: String, breed: String, age: String, ageUnit: String, sex: Str
     let uid = user.uid
     var petData = [String: Any]()
     
-    if name != "" {
-        petData["name"] = name
-    }
-    if breed != "" {
-        petData["breed"] = breed
-    }
-    if age != "" && Int(age) != 0 {
-        petData["age"] = Int(age)
-    }
-    if ageUnit != ""{
-        petData["ageUnit"] = ageUnit
-    }
-    if sex != "" {
-        petData["sex"] = sex
-    }
-    if weight != "" && Float(weight) != 0 {
-        petData["weight"] = Float(weight)
-    }
-    if weightUnit != ""{
-        petData["weightUnit"] = weightUnit
-    }
-    if location != "" {
-        petData["location"] = location
-    }
+    petData["name"] = name
+    petData["breed"] = breed
+    petData["age"] = Int(age)
+    petData["ageUnit"] = ageUnit
+    petData["sex"] = sex
+    petData["weight"] = Float(weight)
+    petData["weightUnit"] = weightUnit
+    petData["location"] = location
     
     createOrUpdateDocument(collection: "pets-info", documentID: uid, data: petData) { error in
-        if let error = error {
-            
-        } else {
+        if error == nil {
             completion("Data updated successfully!")
         }
     }
@@ -62,9 +44,6 @@ func createOrUpdateDocument(collection: String, documentID: String,
     docRef.setData(data, merge: true) { error in
         if let error = error {
             completion(error)
-        } else {
-                print("Document successfully written!")
-            completion(nil)
         }
     }
 }
@@ -135,7 +114,7 @@ func deleteData(uid: String) {
     }
 }
 
-func addNotification(lastFiveMessages: [String] = []) {
+func addNotification(new_message: [String] = []) {
     guard let user = Auth.auth().currentUser else {
         print("User not authenticated.")
         return
@@ -153,9 +132,9 @@ func addNotification(lastFiveMessages: [String] = []) {
 
         var existingMessages = document?.data()?["messages"] as? [String] ?? []
 
-        existingMessages.append(contentsOf: lastFiveMessages)
+        existingMessages.append(contentsOf: new_message)
 
-        notificationsRef.setData(["messages": existingMessages]) { error in
+        notificationsRef.setData(["messages": existingMessages], merge: true) { error in
             if let error = error {
                 print("Error updating notifications: \(error.localizedDescription)")
             } else {
