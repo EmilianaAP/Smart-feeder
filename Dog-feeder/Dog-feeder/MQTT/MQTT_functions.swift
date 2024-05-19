@@ -8,15 +8,17 @@
 import Foundation
 import CocoaMQTT
 import UserNotifications
+import FirebaseAuth
 
 class MQTTManager: ObservableObject {
     private var mqtt: CocoaMQTT?
+    private var userID = Auth.auth().currentUser!.uid
     @Published var isConnected: Bool = false
     @Published var message: String = ""
     @Published var new_message: [String] = []
     
     init() {
-        mqtt = CocoaMQTT(clientID: "SwiftUIApp", host: "34.122.107.45", port: 1883)
+        mqtt = CocoaMQTT(clientID: userID, host: "34.122.107.45", port: 1883)
         mqtt?.username = "Erix"
         mqtt?.password = "!!SmartPet!!"
         mqtt?.delegate = self
@@ -40,7 +42,7 @@ class MQTTManager: ObservableObject {
     }
     
     func publish(topic: String, message: String) {
-        mqtt?.publish(topic, withString: message)
+        mqtt?.publish(userID + "/" + topic, withString: message)
     }
     
     func addMessageToHistory(_ message: String) {
