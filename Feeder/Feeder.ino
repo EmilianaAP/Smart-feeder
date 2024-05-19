@@ -62,7 +62,9 @@ SharpIR SharpIR(ir, model);
 
 // Movement control variables
 unsigned long moveStartTime = 0;
+unsigned long lastMealTime = millis();
 bool startMotor = false; // Flag to start motor based on MQTT command
+bool startedMotor = false;
 byte storedHour = 0;
 byte storedMinute = 0;
 
@@ -80,9 +82,15 @@ void callback(char* topic, byte* payload, unsigned int length) {
   if (strcmp(topic, "time-to-feed") == 0) {
     Serial.println("on topic");
     if (response.equals("start")) {
-      Serial.println("Start");
-      startMotor = true; // Set flag to start motor
-      moveStartTime = millis(); // Record the start time
+      unsigned long currentTime = millis();
+      if (currentTime - lastMealTime >= 60000) {
+        Serial.println("Start");
+        startMotor = true; // Set flag to start motor
+        moveStartTime = currentTime; // Record the start time
+        lastMealTime = currentTime; // Update the last meal time
+      } else {
+        Serial.println("Meal skipped: Less than 1 minute since last meal.");
+      }
     } else {
       // Parse the time in HH:MM format
       int pos = response.indexOf(':');
@@ -114,10 +122,6 @@ void setup() {
 void loop() {
   handleMQTT();
 
-  // Debugging: Print the state of the startMotor flag
-  Serial.print("startMotor flag: ");
-  Serial.println(startMotor);
-
   // Get current time
   timeClient.update();  
   unsigned long unix_epoch = timeClient.getEpochTime();  
@@ -126,15 +130,17 @@ void loop() {
 
   // Check if the current time matches the stored time
   if (storedHour == hour_ && storedMinute == minute_) {
-    startMotor = true; // Set flag to start motor
-    moveStartTime = millis(); // Record the start time
-    // Clear the stored time
-    storedHour = 0;
-    storedMinute = 0;
+    unsigned long currentTime = millis();
+    if (currentTime - lastMealTime >= 60000) {
+      startMotor = true; // Set flag to start motor
+      moveStartTime = currentTime; // Record the start time
+      lastMealTime = currentTime; // Update the last meal time
+    }
   }
 
   if (startMotor) {
-    if (getDistance() > 10){
+    if (getDistance() > 10 || startedMotor == true){
+      startedMotor = true;
       Serial.println("Starting motor movement...");
       controlStepper(); // Debugging: Print when controlStepper() is called
       
@@ -142,10 +148,14 @@ void loop() {
       if (millis() - moveStartTime >= 10000) {
         Serial.println("Motor movement completed.");
         startMotor = false; // Reset the flag
+        startedMotor = false;
+
+        Serial.print(storedHour);
+        Serial.print(":");
+        Serial.println(storedMinute);
       }
     }
   } else {
-    Serial.println("Motor not moving");
     digitalWrite(EN_PIN, HIGH); 
   }
 
