@@ -1,3 +1,9 @@
+#ifdef ESP32
+  #include <WiFi.h>
+#else
+  #include <ESP8266WiFi.h>
+#endif
+
 #include <Wire.h>
 #include <RTClib.h>
 #include <WiFiManager.h>
@@ -24,6 +30,7 @@
 #define SERIAL_PORT       Serial2 // TMC2208/TMC2224 HardwareSerial port
 #define ir                34 // ir: the pin where your sensor is attached
 #define model             430 // model: an int that determines your sensor:  1080 for GP2Y0A21Y
+#define ClientID          WiFi.macAddress()
 //                                            20150 for GP2Y0A02Y
 //                                            (working distance range according to the datasheets)
 
@@ -195,8 +202,8 @@ void setupWiFi() {
 
 // Function to set up MQTT connection
 void setupMQTT() {
-  if (client.connect("arduinoClient", "Erix", "!!SmartPet!!")) {
-    client.publish("outTopic", "hello world");
+  if (client.connect(ClientID.c_str(), "Erix", "!!SmartPet!!")) {
+    client.publish(ClientID.c_str(), "hello world");
     client.subscribe("inTopic");
     client.subscribe("time-to-feed");
   }
