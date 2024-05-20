@@ -57,7 +57,7 @@ extension MQTTManager: CocoaMQTTDelegate {
     func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck) {
         if ack == .accept {
             isConnected = true
-            mqtt.subscribe("/test_1")
+            mqtt.subscribe("notifications")
         }
     }
     
