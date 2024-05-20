@@ -42,7 +42,7 @@ class MQTTManager: ObservableObject {
     }
     
     func publish(topic: String, message: String) {
-        mqtt?.publish(userID + "/" + topic, withString: message)
+        mqtt?.publish(topic, withString: message)
     }
     
     func addMessageToHistory(_ message: String) {

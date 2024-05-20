@@ -39,15 +39,25 @@ struct AddFood: View {
                 
                 DatePicker("Please enter a date", selection: $picked_time, displayedComponents: .hourAndMinute)
                     .labelsHidden()
-                
+
                 Button("Add feeding") {
+                    // Convert picked time to UTC
+                    let calendar = Calendar.current
+                    let utcDate = calendar.date(bySettingHour: calendar.component(.hour, from: picked_time),
+                                                minute: calendar.component(.minute, from: picked_time),
+                                                second: 0,
+                                                of: picked_time)
+                    
                     let formatter = DateFormatter()
+                    formatter.timeZone = TimeZone(abbreviation: "UTC")
                     formatter.dateFormat = "HH:mm"
-                    let formatted_time = formatter.string(from: picked_time)
+                    let formatted_time = formatter.string(from: utcDate ?? Date()) // Use UTC date
+                    
                     print(formatted_time)
                     
                     mqttManager.publish(topic: "time-to-feed", message: formatted_time)
                 }
+
                 .padding([.leading, .trailing], 38)
                 .padding([.top, .bottom], 5)
                 .background(Color("Buttons.Login-Register"))

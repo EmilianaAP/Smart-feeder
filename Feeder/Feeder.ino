@@ -55,7 +55,7 @@ IPAddress server(34, 122, 107, 45);
 WiFiClient espClient;
 PubSubClient client(server, 1883, callback, espClient);
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "asia.pool.ntp.org", 7200, 60000);
+NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 0, 60000);
 hw_timer_t *timer1 = NULL;
 TMC2209Stepper driver(&SERIAL_PORT, R_SENSE, DRIVER_ADDRESS);
 SharpIR SharpIR(ir, model);
@@ -74,22 +74,23 @@ void callback(char* topic, byte* payload, unsigned int length) {
   for (int i = 0; i < length; i++) {
     response += (char)payload[i];
   }
-  Serial.print("Message arrived [");
+
+  //Used for debugging to see if the right messages arrive through the mqtt
+  /*Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
-  Serial.println(response);
+  Serial.println(response);*/
 
   if (strcmp(topic, "time-to-feed") == 0) {
-    Serial.println("on topic");
     if (response.equals("start")) {
       unsigned long currentTime = millis();
       if (currentTime - lastMealTime >= 60000) {
-        Serial.println("Start");
+        //Serial.println("Start");
         startMotor = true; // Set flag to start motor
         moveStartTime = currentTime; // Record the start time
         lastMealTime = currentTime; // Update the last meal time
       } else {
-        Serial.println("Meal skipped: Less than 1 minute since last meal.");
+        //Serial.println("Meal skipped: Less than 1 minute since last meal.");
       }
     } else {
       // Parse the time in HH:MM format
@@ -128,6 +129,10 @@ void loop() {
   byte minute_ = minute(unix_epoch);  
   byte hour_ = hour(unix_epoch);  
 
+  //Used for checking the time
+  /*Serial.print(hour_);
+  Serial.print(minute_);*/
+
   // Check if the current time matches the stored time
   if (storedHour == hour_ && storedMinute == minute_) {
     unsigned long currentTime = millis();
@@ -164,10 +169,10 @@ void loop() {
     last_minute = minute_;  
 
     // Check if RTC time is synchronized
-    DateTime rtcTime = rtc.now();  
+    /*DateTime rtcTime = rtc.now();  
     if (rtcTime != DateTime(year(unix_epoch), month(unix_epoch), day(unix_epoch), hour_, minute_, 0)) {
       Serial.println("Time is not synchronized!");
-    }
+    }*/
   }
 
   delay(2000);
